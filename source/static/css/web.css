@@ -1,0 +1,7 @@
+/* telegram auth in right */
+.auth-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+}

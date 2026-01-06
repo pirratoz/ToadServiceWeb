@@ -11,5 +11,6 @@ def get_app() -> Sanic:
             "templating_path_to_templates": "source/templates/"
         }
     )
+    app.static("/static", "source/static")
     return app
 
