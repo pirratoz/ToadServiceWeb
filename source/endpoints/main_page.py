@@ -41,3 +41,9 @@ async def handler_auth_page(request: Request):
     return await render(
         "web.html", status=200
     )
+
+@main_page.get("/")
+async def handler_root_page(request: Request):
+    return await render(
+        "toadsMain.html", status=200
+    )

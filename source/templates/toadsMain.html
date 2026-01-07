@@ -1,0 +1,104 @@
+{% extends "web.html" %}
+{% block title %}Toads Info{% endblock %}
+
+{% block content %}
+<!-- Информативные блоки -->
+<div class="container mt-4">
+    <div class="row g-4"> <!-- g-4 → отступ между колонками и рядами -->
+
+        <!-- Блок 1 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Кормёжка</h5>
+                <p>Автоматическая подача корма.</p>
+                <ul>
+                    <li>Жабу</li>
+                    <li>Жабёнка</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 2 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Награды</h5>
+                <p>Награды собираются автоматически в указанное время.</p>
+                <ul>
+                    <li>Клановая</li>
+                    <li>Брачная</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 3 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Работа</h5>
+                <table class="table table-bordered text-center mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th colspan="2">Работы</th>
+                        </tr>
+                        <tr>
+                            <th>Невариативные</th>
+                            <th>Вариативные</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Крупье</td>
+                            <td>Казино</td>
+                        </tr>
+                        <tr>
+                            <td>Столовая</td>
+                            <td>Повар</td>
+                        </tr>
+                        <tr>
+                            <td>Грабитель</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Блок 4 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Калькулятор</h5>
+                <p>Умный калькулятор для ограблений - мгновенно считает примеры, определяет верный ответ и избавляет от ошибок.</p>
+            </div>
+        </div>
+
+        <!-- Блок 5 -->
+        <div class="col-md-4">
+        </div>
+
+        <!-- Блок 6 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Жаба дня</h5>
+                <p>Каждую ночь через несколько минут бот узнаёт у Жабьего бога, кто получит титул «Жаба дня»</p>
+            </div>
+        </div>
+
+        <!-- Блок 7 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Поход за картой</h5>
+                <p>Поход за картой никогда не был таким удобным: лечим жабу автоматически перед каждым шагом и выбираем путь в автоматическом режиме!</p>
+            </div>
+        </div>
+
+        <!-- Блок 8 -->
+        <div class="col-md-4">
+        </div>
+
+        <!-- Блок 9 -->
+        <div class="col-md-4">
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

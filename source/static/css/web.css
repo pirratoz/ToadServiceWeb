@@ -1,7 +1,67 @@
-/* telegram auth in right */
-.auth-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 300px;
+/* Бледно-Зелёный фон сайта */
+.greenBackground {
+    background-color: #cbebcb;
+}
+
+/* Зелёная информативная карточка */
+.greenInfoCard {
+    border: 4px solid #006400;
+    background-color: rgba(0, 100, 0, 0.08);
+}
+
+/* Зелёная табличка внутри информативной карточки */
+.greenInfoCard table {
+    border-collapse: collapse;
+}
+
+.greenInfoCard th,
+.greenInfoCard td {
+    background-color: rgba(0, 100, 0, 0.04);
+    border: 2px solid #2f6f3e;
+}
+
+.greenInfoCard thead th {
+    background-color: rgba(0, 100, 0, 0.14) !important;
+    font-weight: 600;
+}
+
+.greenInfoCard tbody tr:hover td {
+    background-color: rgba(0, 100, 0, 0.08);
+}
+
+/* Классы для болотных оттенков менюшных кнопок */
+    /* Основные зелёные кнопки */
+.green-btn {
+    background-color: #2e7d32; /* тёмно-зелёный */
+    color: #fff;
+    border: 2px solid #1b5e20;
+}
+
+.green-btn:hover {
+    background-color: #1b5e20; /* чуть темнее при наведении */
+    border-color: #145a16;
+}
+
+    /* Второстепенные кнопки */
+.green-secondary-btn {
+    background-color: #4caf50; /* болотный зелёный */
+    color: #fff;
+    border: 2px solid #357a38;
+}
+
+.green-secondary-btn:hover {
+    background-color: #357a38;
+    border-color: #2e6b2e;
+}
+
+    /* Информационные кнопки */
+.green-info-btn {
+    background-color: #81c784; /* светло-зелёный */
+    color: #fff;
+    border: 2px solid #4caf50;
+}
+
+.green-info-btn:hover {
+    background-color: #4caf50;
+    border-color: #357a38;
 }
