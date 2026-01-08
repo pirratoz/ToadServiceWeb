@@ -3,4 +3,4 @@ CREATE TABLE settings (
     value TEXT
 );
 
-INSERT INTO settings VALUES ('trial_days', '3 days');
+INSERT INTO settings VALUES ('trial_interval', '3 days');
