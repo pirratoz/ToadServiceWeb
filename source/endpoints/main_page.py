@@ -47,9 +47,11 @@ async def handler_auth_page(request: Request):
                 "exp": datetime.now(timezone.utc) + timedelta(minutes=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")))
             }
             with open(getenv("JWT_PRIVATE_KEY_PATH"), "r") as fp:
-                token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
-            response = redirect(to="/info/profile")
-            response.add_cookie("access_token", token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60)
+                jwt_token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
+            response = await render(
+                "infoProfile.html", status=200
+            )
+            response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response
 
     return await render(

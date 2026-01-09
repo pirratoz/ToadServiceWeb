@@ -22,7 +22,7 @@ async def jwt_auth_middleware(request: Request):
         return redirect("/info/registration")
 
     try:
-        with open(getenv("JWT_PUBLIC_KEY_PATH")) as fp:
+        with open(getenv("JWT_PUBLIC_KEY_PATH"), "r") as fp:
             payload = jwt.decode(
                 token,
                 fp.read(),
