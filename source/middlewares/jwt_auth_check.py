@@ -19,6 +19,7 @@ async def jwt_auth_middleware(request: Request):
 
     token = request.cookies.get("access_token")
     if not token:
+        print("token not found")
         return redirect("/info/registration")
 
     try:
@@ -29,8 +30,10 @@ async def jwt_auth_middleware(request: Request):
                 algorithms=[getenv("JWT_ALGORITHM")]
             )
     except jwt.ExpiredSignatureError:
+        print("ExpiredSignatureError")
         return redirect("/info/registration")
     except jwt.InvalidTokenError:
+        print("InvalidTokenError")
         return redirect("/info/registration")
 
     request.ctx.user_id = int(payload["sub"])

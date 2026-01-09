@@ -59,9 +59,7 @@ async def handler_auth_page(request: Request):
             response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response
 
-    return await render(
-        "web.html", status=200
-    )
+    return await render(template_name="infoRegistration.html", status=200)
 
 @main_page.get("/")
 async def handler_root_page(request: Request):
