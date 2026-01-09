@@ -51,7 +51,7 @@ async def handler_auth_page(request: Request):
             with open(getenv("JWT_PRIVATE_KEY_PATH"), "r") as fp:
                 jwt_token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
             async with request.app.ctx.db_pool.acquire() as connection:
-                user = await UserRepository(connection).create_user(request.ctx.user_id)
+                user = await UserRepository(connection).create_user(recived_data["id"])
             response = redirect(to="/info/profile")
             response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response
