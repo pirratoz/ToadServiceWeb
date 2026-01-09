@@ -42,5 +42,6 @@ def get_app() -> Sanic:
 
     env = Environment(loader=FileSystemLoader(templating_path_to_templates))
     env.globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
+    app.ext.environment = env
 
     return app
