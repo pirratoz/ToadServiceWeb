@@ -28,7 +28,7 @@ def get_app() -> Sanic:
     app.extend(
         config={
             "templating_enable_async": True,
-            "templating_path_to_templates": templating_path_to_templates
+            "templating_path_to_templates": templating_path_to_templates,
         }
     )
     app.static("/static", "source/static")
@@ -39,6 +39,11 @@ def get_app() -> Sanic:
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
 
-    app.ext.template_globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
+    jinja_env = app.ext.templating.environment
+    jinja_env.globals.update(
+        {
+            "MAPPER_WORK_TOAD": MAPPER_WORK_TOAD
+        }
+    )
 
     return app
