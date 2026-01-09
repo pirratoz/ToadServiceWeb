@@ -40,7 +40,7 @@ def get_app() -> Sanic:
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
 
-    env = Environment(loader=FileSystemLoader(templating_path_to_templates))
+    env = Environment(loader=FileSystemLoader(templating_path_to_templates), enable_async=True)
     env.globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
     app.ext.environment = env
 
