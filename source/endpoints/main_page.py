@@ -44,7 +44,7 @@ async def handler_auth_page(request: Request):
         hmac_calculated = hmac.new(secret_key, data_string, hashlib.sha256).hexdigest()
         if hmac.compare_digest(hmac_calculated, recived_data["hash"]):
             payload = {
-                "sub": int(recived_data["id"]),
+                "sub": recived_data["id"],
                 "iat": datetime.now(timezone.utc),
                 "exp": datetime.now(timezone.utc) + timedelta(minutes=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")))
             }

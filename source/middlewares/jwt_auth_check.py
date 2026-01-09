@@ -23,12 +23,6 @@ async def jwt_auth_middleware(request: Request):
 
     try:
         with open(file=getenv("JWT_PUBLIC_KEY_PATH"), mode="r") as fp:
-            print(token)
-            print("===")
-            print(fp.read())
-            print("===")
-            print([getenv("JWT_ALGORITHM")])
-            print("===")
             payload = jwt.decode(
                 token,
                 fp.read(),
