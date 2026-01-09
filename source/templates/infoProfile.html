@@ -2,11 +2,32 @@
 {% block title %}Toads Profile{% endblock %}
 
 {% block content %}
-<h1>Профиль пользователя</h1>
-<ul>
-    <li>ID: {{ user.id }}</li>
-    <li>VIP: {{ "Да" if user.is_vip else "Нет" }}</li>
-    <li>Калькулятор: {{ "Включен" if user.is_calculate else "Выключен" }}</li>
-    <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
-</ul>
+<div class="container mt-4">
+    <div class="row g-4">
+        <!-- Блок 1 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Профиль</h5>
+                <ul>
+                    <li>ID: {{ user.id }}</li>
+                    <li>VIP: {{ "Да" if user.is_vip else "Нет" }}</li>
+                    <li>Калькулятор: {{ "Включен" if user.is_calculate else "Выключен" }}</li>
+                    <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 2 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+                <h5 class="text-center">Награды</h5>
+                <p>Награды собираются автоматически в указанное время.</p>
+                <ul>
+                    <li>Клановая</li>
+                    <li>Брачная</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
