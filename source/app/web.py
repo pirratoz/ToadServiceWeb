@@ -1,6 +1,5 @@
 from sanic import Sanic
 import asyncpg
-from jinja2 import Environment, FileSystemLoader
 
 from source.db.connect import get_dsn
 from source.endpoints import (
@@ -40,8 +39,6 @@ def get_app() -> Sanic:
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
 
-    env = Environment(loader=FileSystemLoader(templating_path_to_templates), enable_async=True)
-    env.globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
-    app.ext.environment = env
+    app.ext.template_globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
 
     return app
