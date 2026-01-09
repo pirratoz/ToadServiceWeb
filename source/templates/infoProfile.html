@@ -52,10 +52,9 @@
                         {% endif %}
                     </div>
 
-                    <!-- Кнопка с иконкой -->
                     <button 
-                        class="btn btn-sm d-flex align-items-center toggle-task-btn"
-                        style="width: 36px; height: 36px; justify-content: center; border-radius: 50%;"
+                        class="btn btn-sm d-flex align-items-center justify-content-center toggle-task-btn"
+                        style="width: 36px; height: 36px; border-radius: 50%; padding: 0;"
                         data-task-type="{{ task.task_type.value }}"
                         data-user-id="{{ task.user_id }}"
                         title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
@@ -65,6 +64,7 @@
                             <i class="bi bi-x-lg text-secondary"></i>
                         {% endif %}
                     </button>
+
 
                 </div>
 
