@@ -4,7 +4,7 @@ from asyncpg import Connection
 
 from datetime import datetime
 
-from source.db.dto import (
+from source.dto import (
     UserInfo,
 )
 
