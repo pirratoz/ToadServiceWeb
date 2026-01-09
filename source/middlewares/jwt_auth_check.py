@@ -33,4 +33,4 @@ async def jwt_auth_middleware(request: Request):
     except jwt.InvalidTokenError:
         return redirect("/info/registration")
 
-    request.ctx.user_id = payload["sub"]
+    request.ctx.user_id = int(payload["sub"])
