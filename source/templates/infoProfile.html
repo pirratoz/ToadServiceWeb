@@ -27,6 +27,13 @@
 
                     <span class="fw-semibold">
                         {{ task.task_type.title }}
+                        
+                        {% if task.task_type.value == "work" %}
+                        <div class="mt-2 p-2 rounded bg-light border">
+                            <strong>Работа:</strong>
+                            {{ MAPPER_WORK_TOAD.get(task.extra["type"], "Безработный") }}
+                        </div>
+                        {% endif %}
                     </span>
 
                     {% if task.turn %}
@@ -44,6 +51,7 @@
                 {% endfor %}
             </div>
         </div>
+
 
     </div>
 </div>

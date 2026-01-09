@@ -10,6 +10,8 @@ from source.middlewares import (
     jwt_auth_middleware,
 )
 
+from source.utils import MAPPER_WORK_TOAD
+
 
 async def setup_db_pool(app: Sanic):
     app.ctx.db_pool = await asyncpg.create_pool(dsn=get_dsn())
@@ -36,4 +38,7 @@ def get_app() -> Sanic:
     app.register_middleware(jwt_auth_middleware, attach_to="request")
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
+
+    app.ext.jinja.add_filter("MAPPER_WORK_TOAD", MAPPER_WORK_TOAD)
+
     return app
