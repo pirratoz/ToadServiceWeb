@@ -20,16 +20,16 @@
             <div class="d-flex justify-content-center btn-toolbar" role="toolbar">
 
                 <div class="btn-group me-2" role="group">
-                    <button type="button" class="btn green-btn">****</button>
-                    <button type="button" class="btn green-btn">****</button>
-                    <button type="button" class="btn green-btn">****</button>
-                    <button type="button" class="btn green-btn">****</button>
+                    <a href="/" class="btn green-btn">****</a>
+                    <a href="/" class="btn green-btn">****</a>
+                    <a href="/" class="btn green-btn">****</a>
+                    <a href="/" class="btn green-btn">****</a>
                 </div>
 
                 <div class="btn-group me-2" role="group">
-                    <button type="button" class="btn green-secondary-btn">****</button>
-                    <button type="button" class="btn green-secondary-btn">****</button>
-                    <button type="button" class="btn green-secondary-btn">****</button>
+                    <a href="/" class="btn green-secondary-btn">****</a>
+                    <a href="/" class="btn green-secondary-btn">****</a>
+                    <a href="/info/registration" class="btn green-secondary-btn">Регистрация</a>
                 </div>
 
                 <div class="btn-group" role="group">
@@ -38,16 +38,8 @@
 
             </div>
 
-            <!-- Telegram auth -->
-            <div class="d-flex justify-content-end mt-2 me-3">
-                <script async
-                    src="https://telegram.org/js/telegram-widget.js?22"
-                    data-telegram-login="ToadsPirraToZbot"
-                    data-size="large"
-                    data-radius="20"
-                    data-auth-url="http://toads.schande.ru/auth"
-                    data-request-access="write"></script>
-            </div>
+            {% block telegram_auth %}
+            {% endblock %}
 
             <!-- Контентный блок -->
             <div class="p-3 mb-3 border border-success rounded-3" style="border-color: #006400;">

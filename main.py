@@ -1,6 +1,7 @@
 from source.app.web import get_app
 from source.endpoints import (
     main_page,
+    info_pages,
 )
 from dotenv import load_dotenv
 
@@ -9,6 +10,7 @@ def main() -> None:
     load_dotenv()
     app = get_app()
     app.blueprint(main_page)
+    app.blueprint(info_pages)
     app.run(host="127.0.0.1", port=8888, debug=True, single_process=True)
 
 
