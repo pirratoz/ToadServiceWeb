@@ -5,7 +5,6 @@ from sanic import (
 from sanic_ext import render
 
 from source.decorators import jwt_auth_required
-from source.db.connect import get_connection
 from source.db.repositories import UserRepository
 
 

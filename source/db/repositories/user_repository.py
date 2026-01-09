@@ -17,7 +17,7 @@ class UserRepository(BaseRepository):
         super().__init__(connection)
 
     async def get_user_by_id(self, user_id: int) -> UserInfo:
-        record = await self.connection.fetchrow("SELECT * FROM users WHERE user_id = $1", user_id)
+        record = await self.connection.fetchrow("SELECT * FROM users WHERE id = $1", user_id)
         return UserInfo.load_from_record(record)
 
     async def create_user(self, user_id: int) -> UserInfo:

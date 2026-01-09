@@ -19,7 +19,18 @@ CREATE USER user_example_THIS WITH PASSWORD 'user_password_THIS';
 4. Create a database and grant rights
 ```
 CREATE DATABASE db_name_THIS;
-GRANT ALL PRIVILEGES ON DATABASE db_toads_THIS TO user_toad_THIS;
+
+\c db_name_THIS
+
+GRANT USAGE ON SCHEMA public TO user_example_THIS;
+
+GRANT CREATE ON SCHEMA public TO user_example_THIS;
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO user_example_THIS;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+GRANT ALL PRIVILEGES ON TABLES TO user_example_THIS;
+
 ```
 
 ## JWT Auth
