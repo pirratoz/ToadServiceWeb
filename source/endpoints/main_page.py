@@ -1,6 +1,11 @@
 import hashlib
 import hmac
 from os import getenv
+from datetime import (
+    datetime,
+    timezone,
+    timedelta,
+)
 
 from sanic import (
     Blueprint,
@@ -8,6 +13,7 @@ from sanic import (
     redirect,
 )
 from sanic_ext import render
+import jwt
 
 
 main_page = Blueprint(
@@ -35,7 +41,16 @@ async def handler_auth_page(request: Request):
         secret_key = hashlib.sha256(getenv("TG_TOKEN").encode("utf-8")).digest()
         hmac_calculated = hmac.new(secret_key, data_string, hashlib.sha256).hexdigest()
         if hmac.compare_digest(hmac_calculated, recived_data["hash"]):
-            return redirect(to="/info/registration")
+            payload = {
+                "sub": recived_data["id"],
+                "iat": datetime.now(timezone.utc),
+                "exp": datetime.now(timezone.utc) + timedelta(minutes=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")))
+            }
+            with open(getenv("JWT_PRIVATE_KEY_PATH"), "r") as fp:
+                token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
+            response = redirect(to="/info/registration")
+            response.cookies["access_token"] = f"Bearer {token}"
+            return response
 
     return await render(
         "web.html", status=200

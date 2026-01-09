@@ -22,6 +22,17 @@ CREATE DATABASE db_name_THIS;
 GRANT ALL PRIVILEGES ON DATABASE db_toads_THIS TO user_toad_THIS;
 ```
 
+## JWT Auth
+1. Generating a private key
+```
+openssl genrsa -out jwt-private.pem 2048
+```
+2. Generating a public key
+```
+openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
+```
+
+
 ## Authors
 
 - [@PirraToZ](https://t.me/PirraToZ)

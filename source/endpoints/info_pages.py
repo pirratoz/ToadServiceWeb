@@ -4,6 +4,8 @@ from sanic import (
 )
 from sanic_ext import render
 
+from source.decorators import jwt_auth_required
+
 
 info_pages = Blueprint(
     name="InfoPages",
@@ -12,7 +14,14 @@ info_pages = Blueprint(
 
 
 @info_pages.get("/registration")
-async def handler_auth_page(request: Request):
+async def handler_registration_page(request: Request):
     return await render(
         "infoRegistration.html", status=200
+    )
+
+@info_pages.get("/profile")
+@jwt_auth_required
+async def handler_profile_page(request: Request):
+    return await render(
+        "infoProfile.html", status=200
     )
