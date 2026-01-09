@@ -10,13 +10,15 @@ from datetime import (
 from sanic import (
     Blueprint,
     Request,
-    redirect,
 )
 from sanic_ext import render
 import jwt
 
-from source.db.repositories import UserRepository
-
+from source.db.repositories import (
+    UserRepository,
+    TaskRepository,
+)
+from source.usecases import CreateUserUseCase
 
 main_page = Blueprint(
     name="MainPage"
@@ -51,10 +53,10 @@ async def handler_auth_page(request: Request):
             with open(getenv("JWT_PRIVATE_KEY_PATH"), "r") as fp:
                 jwt_token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
             async with request.app.ctx.db_pool.acquire() as connection:
-                user_repository = UserRepository(connection)
-                user = await user_repository.get_user_by_id(int(recived_data["id"]))
-                if not user:
-                    user = user_repository.create_user(int(recived_data["id"]))
+                user = await CreateUserUseCase(
+                    user_repo=UserRepository(connection),
+                    task_repo=TaskRepository(connection)
+                ).execute(int(recived_data["id"]))
             response = await render(template_name="toadsMain.html", status=200)
             response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response

@@ -65,3 +65,8 @@
     background-color: #4caf50;
     border-color: #357a38;
 }
+
+/* Для отображения задач в профиле */
+.task-row {
+    background: rgba(255, 255, 255, 0.15);
+}

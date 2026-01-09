@@ -20,14 +20,31 @@
         <!-- Блок 2 -->
         <div class="col-md-4">
             <div class="p-3 rounded-3 greenInfoCard">
-                <h5 class="text-center">Награды</h5>
-                <p>Награды собираются автоматически в указанное время.</p>
-                <ul>
-                    <li>Клановая</li>
-                    <li>Брачная</li>
-                </ul>
+                <h5 class="text-center mb-3">Функции</h5>
+
+                {% for task in tasks.tasks %}
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded task-row">
+
+                    <span class="fw-semibold">
+                        {{ task.task_type.title }}
+                    </span>
+
+                    {% if task.turn %}
+                        <span class="badge bg-success">Включено</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Выключено</span>
+                    {% endif %}
+
+                </div>
+
+                <div class="text-muted small mb-3 ms-2">
+                    ⏱ Следующий запуск:
+                    {{ task.next_run.strftime("%H:%M:%S %d.%m.%Y") }}
+                </div>
+                {% endfor %}
             </div>
         </div>
+
     </div>
 </div>
 {% endblock %}
