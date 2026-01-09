@@ -24,7 +24,8 @@ async def handler_registration_page(request: Request):
 @info_pages.get("/profile")
 @jwt_auth_required
 async def handler_profile_page(request: Request):
-    user = await UserRepository(request.ctx.db).get_user_by_id(request.ctx.user_id)
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user = await UserRepository(connection).get_user_by_id(request.ctx.user_id)
     return await render(
         "infoProfile.html", status=200, context={"user": user}
     )

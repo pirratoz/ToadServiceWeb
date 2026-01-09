@@ -7,7 +7,6 @@ from source.endpoints import (
     info_pages,
 )
 from source.middlewares import (
-    inject_db_connection_middleware,
     jwt_auth_middleware,
 )
 
@@ -35,7 +34,6 @@ def get_app() -> Sanic:
     app.blueprint(main_page)
     app.blueprint(info_pages)
     app.register_middleware(jwt_auth_middleware, attach_to="request")
-    app.register_middleware(inject_db_connection_middleware, attach_to="request")
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
     return app
