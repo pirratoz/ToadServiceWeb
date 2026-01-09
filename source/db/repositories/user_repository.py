@@ -16,6 +16,10 @@ class UserRepository(BaseRepository):
     def __init__(self, connection: Connection):
         super().__init__(connection)
 
+    async def get_user_by_id(self, user_id: int) -> UserInfo:
+        record = await self.connection.fetchrow("SELECT * FROM users WHERE user_id = $1", user_id)
+        return UserInfo.load_from_record(record)
+
     async def create_user(self, user_id: int) -> UserInfo:
         trial_interval = await SettingsRepository(self.connection).get_trial_interval()
         paid_until = datetime.now(timezone.utc) + trial_interval

@@ -2,5 +2,11 @@
 {% block title %}Toads Profile{% endblock %}
 
 {% block content %}
-<h1>This Profile</h1>
+<h1>Профиль пользователя</h1>
+<ul>
+    <li>ID: {{ user.id }}</li>
+    <li>VIP: {{ "Да" if user.is_vip else "Нет" }}</li>
+    <li>Калькулятор: {{ "Включен" if user.is_calculate else "Выключен" }}</li>
+    <li>Оплата активна до: {{ user.paid_until }}</li>
+</ul>
 {% endblock %}

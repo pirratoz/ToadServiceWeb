@@ -5,6 +5,8 @@ from sanic import (
 from sanic_ext import render
 
 from source.decorators import jwt_auth_required
+from source.db.connect import get_connection
+from source.db.repositories import UserRepository
 
 
 info_pages = Blueprint(
@@ -22,6 +24,7 @@ async def handler_registration_page(request: Request):
 @info_pages.get("/profile")
 @jwt_auth_required
 async def handler_profile_page(request: Request):
+    user = await UserRepository(request.ctx.db).get_user_by_id(request.ctx.user_id)
     return await render(
-        "infoProfile.html", status=200
+        "infoProfile.html", status=200, context={"user": user}
     )
