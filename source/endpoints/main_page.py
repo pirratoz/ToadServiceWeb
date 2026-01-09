@@ -55,7 +55,7 @@ async def handler_auth_page(request: Request):
                 user = await user_repository.get_user_by_id(int(recived_data["id"]))
                 if not user:
                     user = user_repository.create_user(int(recived_data["id"]))
-            response = redirect(to="/info/profile")
+            response = await render(template_name="toadsMain.html", status=200)
             response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response
 
