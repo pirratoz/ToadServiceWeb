@@ -16,9 +16,11 @@ class UserRepository(BaseRepository):
     def __init__(self, connection: Connection):
         super().__init__(connection)
 
-    async def get_user_by_id(self, user_id: int) -> UserInfo:
+    async def get_user_by_id(self, user_id: int) -> UserInfo | None:
         record = await self.connection.fetchrow("SELECT * FROM users WHERE id = $1", user_id)
-        return UserInfo.load_from_record(record)
+        if record:
+            return UserInfo.load_from_record(record)
+        return record
 
     async def create_user(self, user_id: int) -> UserInfo:
         trial_interval = await SettingsRepository(self.connection).get_trial_interval()
