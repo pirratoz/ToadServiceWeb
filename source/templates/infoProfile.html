@@ -7,6 +7,6 @@
     <li>ID: {{ user.id }}</li>
     <li>VIP: {{ "Да" if user.is_vip else "Нет" }}</li>
     <li>Калькулятор: {{ "Включен" if user.is_calculate else "Выключен" }}</li>
-    <li>Оплата активна до: {{ user.paid_until }}</li>
+    <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
 </ul>
 {% endblock %}
