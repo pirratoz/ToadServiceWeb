@@ -17,23 +17,26 @@ async def jwt_auth_middleware(request: Request):
     if not getattr(handler, "__auth_required__", False):
         return 
 
-    token = request.cookies.get("access_token")
+    token: str | None = request.cookies.get("access_token")
     if not token:
-        print("token not found")
         return redirect("/info/registration")
 
     try:
-        with open(getenv("JWT_PUBLIC_KEY_PATH"), "r") as fp:
+        with open(file=getenv("JWT_PUBLIC_KEY_PATH"), mode="r") as fp:
+            print(token)
+            print("===")
+            print(fp.read())
+            print("===")
+            print([getenv("JWT_ALGORITHM")])
+            print("===")
             payload = jwt.decode(
                 token,
                 fp.read(),
                 algorithms=[getenv("JWT_ALGORITHM")]
             )
     except jwt.ExpiredSignatureError:
-        print("ExpiredSignatureError")
         return redirect("/info/registration")
     except jwt.InvalidTokenError:
-        print("InvalidTokenError")
         return redirect("/info/registration")
 
     request.ctx.user_id = int(payload["sub"])
