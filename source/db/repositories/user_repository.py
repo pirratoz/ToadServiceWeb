@@ -2,7 +2,10 @@ from source.db.repositories.base_repository import BaseRepository
 from source.db.repositories.settings_repository import SettingsRepository
 from asyncpg import Connection
 
-from datetime import datetime
+from datetime import (
+    datetime,
+    timezone
+)
 
 from source.dto import (
     UserInfo,
@@ -15,7 +18,7 @@ class UserRepository(BaseRepository):
 
     async def create_user(self, user_id: int) -> UserInfo:
         trial_interval = await SettingsRepository(self.connection).get_trial_interval()
-        paid_until = datetime.now() + trial_interval
+        paid_until = datetime.now(timezone.utc) + trial_interval
         record = await self.connection.fetchrow("INSERT INTO users (id, paid_until) VALUES ($1, $2) RETURNING *", user_id, paid_until)
         return UserInfo.load_from_record(record)
 
