@@ -1,5 +1,6 @@
 from sanic import Sanic
 import asyncpg
+from jinja2 import Environment, FileSystemLoader
 
 from source.db.connect import get_dsn
 from source.endpoints import (
@@ -9,7 +10,6 @@ from source.endpoints import (
 from source.middlewares import (
     jwt_auth_middleware,
 )
-
 from source.utils import MAPPER_WORK_TOAD
 
 
@@ -22,13 +22,14 @@ async def close_db_pool(app: Sanic):
 
 
 def get_app() -> Sanic:
+    templating_path_to_templates = "source/templates/"
     app = Sanic(
         name="Toads"
     )
     app.extend(
         config={
             "templating_enable_async": True,
-            "templating_path_to_templates": "source/templates/"
+            "templating_path_to_templates": templating_path_to_templates
         }
     )
     app.static("/static", "source/static")
@@ -39,6 +40,7 @@ def get_app() -> Sanic:
     app.register_listener(setup_db_pool, "before_server_start")
     app.register_listener(close_db_pool, "before_server_stop")
 
-    app.ext.jinja.add_filter("MAPPER_WORK_TOAD", MAPPER_WORK_TOAD)
+    env = Environment(loader=FileSystemLoader(templating_path_to_templates))
+    env.globals["MAPPER_WORK_TOAD"] = MAPPER_WORK_TOAD
 
     return app
