@@ -3,7 +3,11 @@ from datetime import datetime, timezone
 from asyncpg import Connection
 
 from source.db.repositories.base_repository import BaseRepository
-from source.dto import TaskInfoList
+from source.dto import (
+    TaskInfoList,
+    TaskInfo,
+)
+from source.db.enums import TaskTypeEnum
 
 
 class TaskRepository(BaseRepository):
@@ -17,7 +21,8 @@ class TaskRepository(BaseRepository):
             ($1, 'reward_clan', $2, FALSE, '{}'),
             ($1, 'reward_marriage', $2, FALSE, '{}'),
             ($1, 'eat_frog', $2, FALSE, '{}'),
-            ($1, 'eat_toad', $2, FALSE, '{}');
+            ($1, 'eat_toad', $2, FALSE, '{}'),
+            ($1, 'frog_day', $2, FALSE, '{}');
         """
         await self.connection.execute(sql, user_id, datetime.now(timezone.utc))
 
@@ -25,3 +30,17 @@ class TaskRepository(BaseRepository):
         sql = "SELECT user_id, task_type, next_run, turn, extra FROM tasks WHERE user_id = $1"
         records = await self.connection.fetch(sql, user_id)
         return TaskInfoList.load_from_records(records)
+
+    async def update_turn_for_task(self, user_id: int, task: TaskTypeEnum, turn: bool) -> TaskInfo:
+        record = await self.connection.fetchrow(
+            """
+            UPDATE tasks
+            SET turn = $1
+            WHERE user_id = $2 AND task_type = $3
+            RETURNING *
+            """,
+            turn,
+            user_id,
+            task.value
+        )
+        return TaskInfo.load_from_record(record)

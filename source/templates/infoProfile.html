@@ -7,11 +7,27 @@
         <!-- Блок 1 -->
         <div class="col-md-4">
             <div class="p-3 rounded-3 greenInfoCard">
-                <h5 class="text-center">Профиль</h5>
-                <ul>
+                <h5 class="text-center mb-3">Профиль</h5>
+                <ul class="list-unstyled">
                     <li>ID: {{ user.id }}</li>
-                    <li>VIP: {{ "Да" if user.is_vip else "Нет" }}</li>
-                    <li>Калькулятор: {{ "Включен" if user.is_calculate else "Выключен" }}</li>
+                    <li>
+                        VIP: 
+                        <button 
+                            class="btn btn-sm {% if user.is_vip %}btn-success{% else %}btn-secondary{% endif %} toggle-user-btn"
+                            data-field="is_vip"
+                            data-user-id="{{ user.id }}">
+                            {% if user.is_vip %}Включено{% else %}Выключено{% endif %}
+                        </button>
+                    </li>
+                    <li>
+                        Калькулятор: 
+                        <button 
+                            class="btn btn-sm {% if user.is_calculate %}btn-success{% else %}btn-secondary{% endif %} toggle-user-btn"
+                            data-field="is_calculate"
+                            data-user-id="{{ user.id }}">
+                            {% if user.is_calculate %}Включен{% else %}Выключен{% endif %}
+                        </button>
+                    </li>
                     <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
                 </ul>
             </div>
@@ -25,22 +41,30 @@
                 {% for task in tasks.tasks %}
                 <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded task-row">
 
-                    <span class="fw-semibold">
-                        {{ task.task_type.title }}
-                        
+                    <div>
+                        <span class="fw-semibold">{{ task.task_type.title }}</span>
+
                         {% if task.task_type.value == "work" %}
-                        <div class="mt-2 p-2 rounded bg-light border">
-                            <strong>Работа:</strong>
-                            {{ MAPPER_WORK_TOAD.get(task.extra["type"], "Безработный") }}
+                        <div class="mt-1 p-1 rounded bg-light border small">
+                            <strong>Тип:</strong>
+                            {{ MAPPER_WORK_TOAD.get(task.extra["type"], "Беззаботный") }}
                         </div>
                         {% endif %}
-                    </span>
+                    </div>
 
-                    {% if task.turn %}
-                        <span class="badge bg-success">Включено</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Выключено</span>
-                    {% endif %}
+                    <!-- Кнопка с иконкой -->
+                    <button 
+                        class="btn btn-sm d-flex align-items-center toggle-task-btn"
+                        style="width: 36px; height: 36px; justify-content: center; border-radius: 50%;"
+                        data-task-type="{{ task.task_type.value }}"
+                        data-user-id="{{ task.user_id }}"
+                        title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
+                        {% if task.turn %}
+                            <i class="bi bi-check-lg text-success"></i>
+                        {% else %}
+                            <i class="bi bi-x-lg text-secondary"></i>
+                        {% endif %}
+                    </button>
 
                 </div>
 
@@ -51,7 +75,6 @@
                 {% endfor %}
             </div>
         </div>
-
 
     </div>
 </div>

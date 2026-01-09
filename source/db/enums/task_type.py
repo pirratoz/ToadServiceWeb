@@ -7,6 +7,7 @@ class TaskTypeEnum(Enum):
     REWARD_MARRIAGE = "reward_marriage"
     EAT_FROG = "eat_frog"
     EAT_TOAD = "eat_toad"
+    FROG_DAY = "frog_day"
 
     @property
     def title(self) -> str:
@@ -16,5 +17,6 @@ class TaskTypeEnum(Enum):
             TaskTypeEnum.REWARD_MARRIAGE: "Награда брака",
             TaskTypeEnum.EAT_FROG: "Покормить жабу",
             TaskTypeEnum.EAT_TOAD: "Покормить жабёнка",
+            TaskTypeEnum.FROG_DAY: "Жаба дня",
         }[self]
     
