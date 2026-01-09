@@ -5,6 +5,7 @@ from os import getenv
 from sanic import (
     Blueprint,
     Request,
+    redirect,
 )
 from sanic_ext import render
 
@@ -34,9 +35,7 @@ async def handler_auth_page(request: Request):
         secret_key = hashlib.sha256(getenv("TG_TOKEN").encode("utf-8")).digest()
         hmac_calculated = hmac.new(secret_key, data_string, hashlib.sha256).hexdigest()
         if hmac.compare_digest(hmac_calculated, recived_data["hash"]):
-            return await render(
-                "panel.html", status=200
-            )
+            return redirect(to="/info/registration")
 
     return await render(
         "web.html", status=200
