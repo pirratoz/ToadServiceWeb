@@ -33,5 +33,5 @@ async def handler_profile_page(request: Request):
             task_repo=TaskRepository(connection)
         ).execute(request.ctx.user_id)
     return await render(
-        "infoProfile.html", status=200, context={"user": user, tasks: tasks}
+        "infoProfile.html", status=200, context={"user": user, "tasks": tasks}
     )
