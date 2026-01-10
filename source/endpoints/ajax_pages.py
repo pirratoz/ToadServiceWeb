@@ -5,6 +5,7 @@ from sanic import (
 )
 
 from source.db.enums import TaskTypeEnum
+from source.decorators import jwt_auth_required
 from source.db.repositories import (
     UserRepository,
     TaskRepository,
@@ -17,6 +18,7 @@ ajax_page = Blueprint(
 
 
 @ajax_page.post("/set/turn")
+@jwt_auth_required
 async def handler_set_turn(request: Request):
     """
     JSON:
