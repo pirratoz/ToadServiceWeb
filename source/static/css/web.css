@@ -70,3 +70,22 @@
 .task-row {
     background: rgba(255, 255, 255, 0.15);
 }
+
+.btn-turn {
+    width: 36px; 
+    height: 36px; 
+    border-radius: 50%; 
+    padding: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    color: white;
+}
+
+.btn-turn-on {
+    background-color: #28a745;
+}
+
+.btn-turn-off {
+    background-color: #6c757d;
+}

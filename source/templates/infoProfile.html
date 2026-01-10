@@ -53,18 +53,16 @@
                     </div>
 
                     <button 
-                        class="btn btn-sm d-flex align-items-center justify-content-center toggle-task-btn"
-                        style="width: 36px; height: 36px; border-radius: 50%; padding: 0;"
+                        class="btn btn-sm toggle-task-btn btn-turn {% if task.turn %}btn-turn-on{% else %}btn-turn-off{% endif %}"
                         data-task-type="{{ task.task_type.value }}"
                         data-user-id="{{ task.user_id }}"
                         title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
                         {% if task.turn %}
-                            <i class="bi bi-check-lg text-success"></i>
+                            <i class="bi bi-check-lg"></i>
                         {% else %}
-                            <i class="bi bi-x-lg text-secondary"></i>
+                            <i class="bi bi-x-lg"></i>
                         {% endif %}
                     </button>
-
 
                 </div>
 
