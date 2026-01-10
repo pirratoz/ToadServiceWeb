@@ -55,7 +55,6 @@
                     <button 
                         class="btn btn-sm toggle-task-btn btn-turn {% if task.turn %}btn-turn-on{% else %}btn-turn-off{% endif %}"
                         data-task-type="{{ task.task_type.value }}"
-                        data-user-id="{{ task.user_id }}"
                         title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
                         {% if task.turn %}
                             <i class="bi bi-check-lg"></i>
@@ -81,7 +80,6 @@
 document.querySelectorAll('.toggle-task-btn').forEach(button => {
     button.addEventListener('click', async () => {
         const taskType = button.dataset.taskType;
-        const userId = button.dataset.userId;
         const newState = !button.classList.contains('btn-turn-on'); // инвертируем состояние
 
         try {
