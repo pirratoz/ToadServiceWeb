@@ -23,7 +23,7 @@ async def handler_set_turn(request: Request):
     """
     JSON:
     {
-        "settings": ["vip", "calculate", "work", "reward_clan", "reward_marriage", "eat_frog", "eat_toad", "frog_day"],
+        "settings": ["is_vip", "is_calculate", "work", "reward_clan", "reward_marriage", "eat_frog", "eat_toad", "frog_day"],
         "value": true/false
     }
     """
@@ -31,9 +31,9 @@ async def handler_set_turn(request: Request):
     field = data.get("field")
     value = data.get("value")
     async with request.app.ctx.db_pool.acquire() as connection:
-        if field == "vip":
+        if field == "is_vip":
             info = await UserRepository(connection).update_vip_status(request.ctx.user_id, value)
-        elif field == "calculate":
+        elif field == "is_calculate":
             info = await UserRepository(connection).update_calculate_status(request.ctx.user_id, value)
         else:
             info = await TaskRepository(connection).update_turn_for_task(request.ctx.user_id, TaskTypeEnum(field), value)
