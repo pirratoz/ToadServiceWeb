@@ -37,4 +37,4 @@ async def handler_set_turn(request: Request):
             info = await UserRepository(connection).update_calculate_status(request.ctx.user_id, value)
         else:
             info = await TaskRepository(connection).update_turn_for_task(request.ctx.user_id, TaskTypeEnum(field), value)
-    return json({"info": info})
+    return json({"info": info.dump()})

@@ -24,6 +24,17 @@ class TaskInfo:
             turn=record["turn"],
             extra=record["extra"]
         )
+    
+    def dump(self) -> dict:
+        return {
+            "user_id": self.user_id,
+            "task_type": self.task_type.value,
+            "next_run": self.next_run.isoformat(),
+            "turn": self.turn,
+            "extra": self.extra
+        }
+
+
 
 @dataclass
 class TaskInfoList:
@@ -37,3 +48,11 @@ class TaskInfoList:
                 for record in records
             ]
         )
+
+    def dump(self) -> dict:
+        return {
+            "tasks": [
+                task.dump()
+                for task in self.tasks
+            ]
+        }

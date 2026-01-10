@@ -21,3 +21,12 @@ class UserInfo:
             is_calculate=record["is_calculate"],
             paid_until=record["paid_until"]
         )
+
+    def dump(self) -> dict:
+        return {
+            "id": self.id,
+            "is_banned": self.is_banned,
+            "is_vip": self.is_vip,
+            "is_calculate": self.is_calculate,
+            "paid_until": self.paid_until.isoformat(),
+        }
