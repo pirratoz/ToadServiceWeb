@@ -28,6 +28,20 @@
                         </button>
                     </li>
                     <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
+                    <div class="p-3 rounded-3 greenInfoCard">
+                        <h5 class="text-center mb-3">Информация чата</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <strong>Chat ID:</strong>
+                                {{ user.chat_id if user.chat_id else "Не привязан" }}
+                            </li>
+                            <li class="mt-1">
+                                <strong>Chat Title:</strong>
+                                {{ user.chat_title if user.chat_title else "Не задано" }}
+                            </li>
+                        </ul>
+                    </div>
+
                 </ul>
             </div>
         </div>

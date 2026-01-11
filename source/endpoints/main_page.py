@@ -35,7 +35,7 @@ async def handler_auth_page(request: Request):
             "username": request.args.get("username", None),
             "photo_url": request.args.get("photo_url", None),
             "auth_date": request.args.get("auth_date", None),
-            "hash": request.args.get("hash", None)
+            "hash": request.args.get("hash", None),
         }
 
         data_copy = {k: v for k, v in recived_data.items() if k != "hash" and v is not None}

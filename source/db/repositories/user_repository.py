@@ -28,6 +28,26 @@ class UserRepository(BaseRepository):
         record = await self.connection.fetchrow("INSERT INTO users (id, paid_until) VALUES ($1, $2) RETURNING *", user_id, paid_until)
         return UserInfo.load_from_record(record)
 
+    async def update_chat_id(self, user_id: int, chat_id: int) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET chat_id = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, chat_id, user_id)
+        return UserInfo.load_from_record(record)
+
+    async def update_chat_title(self, user_id: int, chat_title: bool) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET chat_title = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, chat_title, user_id)
+        return UserInfo.load_from_record(record)
+
     async def update_vip_status(self, user_id: int, is_vip: bool) -> UserInfo:
         sql = """
         UPDATE users
