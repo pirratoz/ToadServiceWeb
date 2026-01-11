@@ -3,6 +3,7 @@
 
 {% block html_head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/payment_card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_card.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -31,20 +32,36 @@
                             {% if user.is_calculate %}Включен{% else %}Выключен{% endif %}
                         </button>
                     </li>
-                    <li>Оплата активна до: {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}</li>
-                    <div class="p-3 rounded-3 greenInfoCard">
-                        <h5 class="text-center mb-3">Информация чата</h5>
-                        <ul class="list-unstyled mb-0">
-                            <li>
-                                <strong>Chat ID:</strong>
-                                {{ user.chat_id if user.chat_id else "Не привязан" }}
-                            </li>
-                            <li class="mt-1">
-                                <strong>Chat Title:</strong>
-                                {{ user.chat_title if user.chat_title else "Не задано" }}
-                            </li>
-                        </ul>
+
+                    <div class="col-md-4">
+                        <div class="p-3 rounded-3 info-blue-card">
+
+                            <div class="leaf-icon">🍃</div>
+                            <div class="fly-icon">🪰</div>
+
+                            <h5 class="info-card-title">
+                                Информация чата
+                            </h5>
+
+                            <ul class="list-unstyled mb-0 text-center">
+                                <li class="mb-2">
+                                    <strong>Chat ID:</strong><br>
+                                    <span>
+                                        {{ user.chat_id if user.chat_id else "Не привязан" }}
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <strong>Chat Title:</strong><br>
+                                    <span>
+                                        {{ user.chat_title if user.chat_title else "Не задано" }}
+                                    </span>
+                                </li>
+                            </ul>
+
+                        </div>
                     </div>
+
 
                     <div class="col-md-4">
                         <div class="p-3 rounded-3 payment-card">
