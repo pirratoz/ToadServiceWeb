@@ -9,71 +9,75 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row g-4">
-        <!-- Блок 1 -->
-        <div class="col-md-4">
+        <!-- Главная карточка Профиль -->
+        <div class="col-md-8">
             <div class="p-3 rounded-3 greenInfoCard">
+
                 <h5 class="text-center mb-3">Профиль</h5>
-                <ul class="list-unstyled">
+
+                <ul class="list-unstyled mb-3">
                     <li>ID: {{ user.id }}</li>
-                    <li>
-                        VIP: 
+
+                    <li class="mt-2">
+                        VIP:
                         <button 
                             class="btn btn-sm {% if user.is_vip %}btn-success{% else %}btn-secondary{% endif %} toggle-user-btn"
                             data-field="is_vip">
                             {% if user.is_vip %}Включено{% else %}Выключено{% endif %}
                         </button>
                     </li>
-                    <li>
-                        Калькулятор: 
+
+                    <li class="mt-2">
+                        Калькулятор:
                         <button 
                             class="btn btn-sm {% if user.is_calculate %}btn-success{% else %}btn-secondary{% endif %} toggle-user-btn"
-                            data-field="is_calculate"
-                            data-user-id="{{ user.id }}">
+                            data-field="is_calculate">
                             {% if user.is_calculate %}Включен{% else %}Выключен{% endif %}
                         </button>
                     </li>
+                </ul>
 
-                    <div class="col-md-4">
+                <!-- Внутренний ряд: 2 карточки -->
+                <div class="row">
+                    
+                    <!-- Карточка Информация чата -->
+                    <div class="col-md-6">
                         <div class="p-3 rounded-3 info-blue-card">
 
                             <div class="leaf-icon">🍃</div>
                             <div class="fly-icon">🪰</div>
 
-                            <h5 class="info-card-title">
+                            <h5 class="info-card-title text-center mb-3">
                                 Информация чата
                             </h5>
 
                             <ul class="list-unstyled mb-0 text-center">
                                 <li class="mb-2">
                                     <strong>Chat ID:</strong><br>
-                                    <span>
-                                        {{ user.chat_id if user.chat_id else "Не привязан" }}
-                                    </span>
+                                    {{ user.chat_id if user.chat_id else "Не привязан" }}
                                 </li>
 
                                 <li>
                                     <strong>Chat Title:</strong><br>
-                                    <span>
-                                        {{ user.chat_title if user.chat_title else "Не задано" }}
-                                    </span>
+                                    {{ user.chat_title if user.chat_title else "Не задано" }}
                                 </li>
                             </ul>
 
                         </div>
                     </div>
 
-
-                    <div class="col-md-4">
+                    <!-- Карточка Оплата -->
+                    <div class="col-md-6">
                         <div class="p-3 rounded-3 payment-card">
 
                             <div class="frog-icon">🐸</div>
                             <div class="tree-icon">🌳</div>
 
-                            <h5 class="payment-card-title">
+                            <h5 class="payment-card-title text-center mb-3">
                                 Оплата
                             </h5>
 
-                            <div class="payment-card-date">
+                            <div class="payment-card-date text-center">
                                 <div class="label">Активна до</div>
                                 <div class="value">
                                     {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
@@ -83,8 +87,9 @@
                         </div>
                     </div>
 
+                </div>
+                <!-- /внутренний ряд -->
 
-                </ul>
             </div>
         </div>
 
