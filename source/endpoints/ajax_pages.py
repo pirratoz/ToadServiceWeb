@@ -4,7 +4,10 @@ from sanic import (
     json,
 )
 
-from source.db.enums import TaskTypeEnum
+from source.db.enums import (
+    TaskTypeEnum,
+    WorkTypeEnum,
+)
 from source.decorators import jwt_auth_required
 from source.db.repositories import (
     UserRepository,
@@ -37,4 +40,17 @@ async def handler_set_turn(request: Request):
             info = await UserRepository(connection).update_calculate_status(request.ctx.user_id, value)
         else:
             info = await TaskRepository(connection).update_turn_for_task(request.ctx.user_id, TaskTypeEnum(field), value)
+    return json({"info": info.dump()})
+
+
+@ajax_page.post("/set/work")
+@jwt_auth_required
+async def set_work_type(request: Request):
+    user_id = request.ctx.user_id
+    data = request.json
+    work_type = WorkTypeEnum(data.get("type"))
+
+    async with request.app.ctx.db_pool.acquire() as connection:
+        info = await TaskRepository(connection).update_work_type(user_id, work_type)
+
     return json({"info": info.dump()})

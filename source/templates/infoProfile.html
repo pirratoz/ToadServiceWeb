@@ -46,7 +46,20 @@
                         {% if task.task_type.value == "work" %}
                         <div class="mt-1 p-1 rounded bg-light border small">
                             <strong>Тип:</strong>
-                            {{ MAPPER_WORK_TOAD.get(task.extra["type"], "Беззаботный") }}
+
+                            <select
+                                class="form-select form-select-sm work-type-select"
+                                data-task-type="work"
+                            >
+                                {% for key, title in MAPPER_WORK_TOAD.items() %}
+                                    <option
+                                        value="{{ key }}"
+                                        {% if task.extra["type"] == key %}selected{% endif %}
+                                    >
+                                        {{ title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
                         </div>
                         {% endif %}
                     </div>
@@ -149,6 +162,32 @@ document.querySelectorAll('.toggle-task-btn').forEach(button => {
             }
         } catch (err) {
             console.error("Ошибка AJAX:", err);
+        }
+    });
+});
+</script>
+
+<script>
+document.querySelectorAll(".work-type-select").forEach(select => {
+    select.addEventListener("change", async () => {
+        const workType = select.value;
+
+        try {
+            const response = await fetch("/ajax/set/work", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    type: workType
+                })
+            });
+
+            if (!response.ok) {
+                console.error("Ошибка сохранения типа работы");
+            }
+        } catch (e) {
+            console.error("AJAX error:", e);
         }
     });
 });

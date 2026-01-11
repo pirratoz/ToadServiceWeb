@@ -7,7 +7,10 @@ from source.dto import (
     TaskInfoList,
     TaskInfo,
 )
-from source.db.enums import TaskTypeEnum
+from source.db.enums import (
+    TaskTypeEnum,
+    WorkTypeEnum,
+)
 
 
 class TaskRepository(BaseRepository):
@@ -17,7 +20,7 @@ class TaskRepository(BaseRepository):
     async def create_tasks(self, user_id: int) -> None:
         sql = """
         INSERT INTO tasks (user_id, task_type, next_run, turn, extra) VALUES
-            ($1, 'work', $2, FALSE, '{"type": null}'),
+            ($1, 'work', $2, FALSE, '{"type": "carefree"}'),
             ($1, 'reward_clan', $2, FALSE, '{}'),
             ($1, 'reward_marriage', $2, FALSE, '{}'),
             ($1, 'eat_frog', $2, FALSE, '{}'),
@@ -42,5 +45,25 @@ class TaskRepository(BaseRepository):
             turn,
             user_id,
             task.value
+        )
+        return TaskInfo.load_from_record(record)
+
+    async def update_work_type(self, user_id: int, type: WorkTypeEnum) -> TaskInfo:
+        sql = """
+        UPDATE tasks
+        SET extra = jsonb_set(
+            COALESCE(extra, '{}'::jsonb),
+            '{type}',
+            to_jsonb($1::text),
+            true
+        )
+        WHERE user_id = $2 AND task_type = $3
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(
+            sql,
+            type.value,
+            user_id,
+            TaskTypeEnum.WORK.value
         )
         return TaskInfo.load_from_record(record)
