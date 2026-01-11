@@ -80,6 +80,11 @@
                     ⏱ Следующий запуск:
                     {{ task.next_run.strftime("%H:%M:%S %d.%m.%Y") }}
                 </div>
+                <input 
+                    type="datetime-local"
+                    class="form-control form-control-sm ms-2 next-run-input"
+                    data-task-type="{{ task.task_type.value }}"
+                    value="{{ task.next_run.strftime('%Y-%m-%dT%H:%M:%S') }}">
                 {% endfor %}
             </div>
         </div>
