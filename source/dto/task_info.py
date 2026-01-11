@@ -2,6 +2,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from typing import Iterable, Any
 
+from ujson import loads
 from asyncpg import Record
 
 from source.db.enums import TaskTypeEnum
@@ -22,7 +23,7 @@ class TaskInfo:
             task_type=TaskTypeEnum(record["task_type"]),
             next_run=record["next_run"],
             turn=record["turn"],
-            extra=record["extra"]
+            extra=loads(record["extra"])
         )
     
     def dump(self) -> dict:
