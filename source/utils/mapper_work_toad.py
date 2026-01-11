@@ -1,7 +1,8 @@
 MAPPER_WORK_TOAD = {
-    "Croupier": "Крупье",
-    "Casino": "Казино",
-    "Cafeteria": "Столовая",
-    "Cook": "Повар",
-    "Robber": "Грабитель"
+    "croupier": "Крупье",
+    "casino": "Казино",
+    "cafeteria": "Столовая",
+    "cook": "Повар",
+    "robber": "Грабитель",
+    "carefree": "Беззаботный",
 }
