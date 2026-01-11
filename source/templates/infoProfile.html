@@ -42,6 +42,38 @@
                         </ul>
                     </div>
 
+                    <div class="p-3 rounded-3 position-relative"
+                    style="
+                        background: linear-gradient(135deg, #ede4ff, #e6d9ff);
+                        border: 1px solid #d6c8ff;
+                        overflow: hidden;
+                    ">
+
+                        <!-- Декоративное дерево -->
+                        <div style="
+                            position: absolute;
+                            right: -10px;
+                            bottom: -10px;
+                            font-size: 72px;
+                            opacity: 0.15;
+                        ">
+                            🌳
+                        </div>
+
+                        <h5 class="text-center mb-3 text-dark">
+                            Оплата
+                        </h5>
+
+                        <div class="text-center">
+                            <div class="fw-semibold mb-1">
+                                Активна до
+                            </div>
+                            <div class="fs-5">
+                                {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                            </div>
+                        </div>
+                    </div>
+
                 </ul>
             </div>
         </div>
