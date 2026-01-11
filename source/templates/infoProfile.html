@@ -67,7 +67,7 @@
                         </div>
 
                         <!-- Правая часть: кнопки и input -->
-                        <div class="col-6 d-flex flex-column align-items-end">
+                        <div class="col-6 d-flex flex-column">
                             <button 
                                 class="btn btn-sm toggle-task-btn btn-turn mb-2 {% if task.turn %}btn-turn-on{% else %}btn-turn-off{% endif %}"
                                 data-task-type="{{ task.task_type.value }}"
@@ -80,16 +80,16 @@
                             </button>
 
                             <!-- Input datetime + кнопка применить -->
-                            <div class="d-flex">
+                            <div class="d-flex w-100">
                                 <input 
                                     type="datetime-local" 
-                                    class="form-control form-control-sm next-run-input me-1"
+                                    class="form-control form-control-sm me-1"
                                     data-task-type="{{ task.task_type.value }}"
                                     value="{{ task.next_run.strftime('%Y-%m-%dT%H:%M:%S') }}"
-                                    style="width: 120px;"
+                                    style="flex: 1;"
                                 >
                                 <button 
-                                    class="btn btn-sm btn-primary apply-next-run-btn"
+                                    class="btn btn-sm btn-primary"
                                     data-task-type="{{ task.task_type.value }}"
                                     title="Применить новое время"
                                 >
