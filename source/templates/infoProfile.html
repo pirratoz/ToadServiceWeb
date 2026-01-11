@@ -95,76 +95,73 @@
 
 
         <!-- Блок 2 -->
-        <div class="col-md-8">
+        <div class="col-md-4">
             <div class="p-3 rounded-3 greenInfoCard">
-                <h5 class="text-center mb-3">Функции</h5>
+                <h5 class="text-center mb-3">Настройки</h5>
 
                 {% for task in tasks.tasks %}
                 <div class="task-row mb-3 p-2 rounded border" style="background-color: #f8f9fa;">
-                    <div class="row align-items-start">
 
-                        <!-- Левая часть: название и work-type -->
-                        <div class="col-6">
-                            <span class="fw-semibold">{{ task.task_type.title }}</span>
-
-                            {% if task.task_type.value == "work" %}
-                            <div class="mt-1">
-                                <select
-                                    class="form-select form-select-sm work-type-select"
-                                    data-task-type="work"
-                                    style="min-width: 140px;"
-                                >
-                                    {% for key, title in MAPPER_WORK_TOAD.items() %}
-                                        <option value="{{ key }}" {% if task.extra["type"] == key %}selected{% endif %}>
-                                            {{ title }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                    <!-- Первая строка: кнопка + название -->
+                    <div class="d-flex align-items-center mb-2">
+                        <button 
+                            class="btn btn-sm toggle-task-btn btn-turn me-2 {% if task.turn %}btn-turn-on{% else %}btn-turn-off{% endif %}"
+                            data-task-type="{{ task.task_type.value }}"
+                            title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
+                            {% if task.turn %}
+                                <i class="bi bi-check-lg"></i>
+                            {% else %}
+                                <i class="bi bi-x-lg"></i>
                             {% endif %}
+                        </button>
 
-                            <div class="text-muted small mt-1 next-run-text">
-                                ⏱ Следующий запуск: {{ task.next_run.strftime("%d.%m.%Y, %H:%M") }}
-                            </div>
+                        <span class="fw-semibold">{{ task.task_type.title }}</span>
+
+                        {% if task.task_type.value == "work" %}
+                        <div class="ms-3">
+                            <select
+                                class="form-select form-select-sm work-type-select"
+                                data-task-type="work"
+                                style="min-width: 140px;"
+                            >
+                                {% for key, title in MAPPER_WORK_TOAD.items() %}
+                                    <option value="{{ key }}" {% if task.extra["type"] == key %}selected{% endif %}>
+                                        {{ title }}
+                                    </option>
+                                {% endfor %}
+                            </select>
                         </div>
-
-                        <!-- Правая часть: кнопки и input -->
-                        <div class="col-6 d-flex flex-column">
-                            <button 
-                                class="btn btn-sm toggle-task-btn btn-turn mb-2 {% if task.turn %}btn-turn-on{% else %}btn-turn-off{% endif %}"
-                                data-task-type="{{ task.task_type.value }}"
-                                title="{% if task.turn %}Включено{% else %}Выключено{% endif %}">
-                                {% if task.turn %}
-                                    <i class="bi bi-check-lg"></i>
-                                {% else %}
-                                    <i class="bi bi-x-lg"></i>
-                                {% endif %}
-                            </button>
-
-                            <!-- Input datetime + кнопка применить -->
-                            <div class="d-flex w-100">
-                                <input 
-                                    type="datetime-local" 
-                                    class="form-control form-control-sm me-1"
-                                    data-task-type="{{ task.task_type.value }}"
-                                    value="{{ task.next_run.strftime('%Y-%m-%dT%H:%M:%S') }}"
-                                    style="flex: 1;"
-                                >
-                                <button 
-                                    class="btn btn-sm btn-primary apply-next-run-btn"
-                                    data-task-type="{{ task.task_type.value }}"
-                                    title="Применить новое время"
-                                >
-                                    ✔
-                                </button>
-                            </div>
-                        </div>
-
+                        {% endif %}
                     </div>
+
+                    <!-- Вторая строка: время следующего запуска + input + кнопка -->
+                    <div class="d-flex align-items-center">
+                        <div class="text-muted small me-2 next-run-text" style="flex: 1;">
+                            ⏱ Следующий запуск: {{ task.next_run.strftime("%d.%m.%Y, %H:%M") }}
+                        </div>
+
+                        <input 
+                            type="datetime-local" 
+                            class="form-control form-control-sm me-1 next-run-input"
+                            data-task-type="{{ task.task_type.value }}"
+                            value="{{ task.next_run.strftime('%Y-%m-%dT%H:%M:%S') }}"
+                            style="width: 140px;"
+                        >
+                        <button 
+                            class="btn btn-sm btn-primary apply-next-run-btn"
+                            data-task-type="{{ task.task_type.value }}"
+                            title="Применить новое время"
+                        >
+                            ✔
+                        </button>
+                    </div>
+
                 </div>
                 {% endfor %}
+
             </div>
         </div>
+
 
 
     </div>
