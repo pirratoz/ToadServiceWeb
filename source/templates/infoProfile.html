@@ -52,12 +52,11 @@
                                 data-task-type="work"
                             >
                                 {% for key, title in MAPPER_WORK_TOAD.items() %}
-                                    <option
-                                        value="{{ key }}"
-                                        {% if task.extra["type"] == key %}selected{% endif %}
-                                    >
-                                        {{ title }}
-                                    </option>
+                                    {% if task.extra["type"] == key %}
+                                    <option value="{{ key }}" selected>{{ title }}</option>
+                                    {% else %}
+                                    <option value="{{ key }}">{{ title }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
