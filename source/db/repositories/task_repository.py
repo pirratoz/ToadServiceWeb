@@ -67,3 +67,22 @@ class TaskRepository(BaseRepository):
             TaskTypeEnum.WORK.value
         )
         return TaskInfo.load_from_record(record)
+
+    async def update_next_run_for_task(
+        self, 
+        user_id: int, 
+        task: TaskTypeEnum, 
+        next_run: datetime
+    ) -> TaskInfo:
+        record = await self.connection.fetchrow(
+            """
+            UPDATE tasks
+            SET next_run = $1
+            WHERE user_id = $2 AND task_type = $3
+            RETURNING *
+            """,
+            next_run,
+            user_id,
+            task.value
+        )
+        return TaskInfo.load_from_record(record)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from sanic import (
     Blueprint,
     Request,
@@ -52,5 +53,18 @@ async def set_work_type(request: Request):
 
     async with request.app.ctx.db_pool.acquire() as connection:
         info = await TaskRepository(connection).update_work_type(user_id, work_type)
+
+    return json({"info": info.dump()})
+
+@ajax_page.post("/set/next_run")
+@jwt_auth_required
+async def set_next_run(request: Request):
+    data = request.json
+    async with request.app.ctx.db_pool.acquire() as connection:
+        info = await TaskRepository(connection).update_next_run_for_task(
+            user_id = request.ctx.user_id,
+            task=TaskTypeEnum(data.get("task_type")),
+            next_run=datetime.fromisoformat(data.get("next_run"))
+        )
 
     return json({"info": info.dump()})
