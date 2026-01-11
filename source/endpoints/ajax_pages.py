@@ -63,7 +63,7 @@ async def set_next_run(request: Request):
     async with request.app.ctx.db_pool.acquire() as connection:
         info = await TaskRepository(connection).update_next_run_for_task(
             user_id = request.ctx.user_id,
-            task=TaskTypeEnum(data.get("task_type")),
+            task=TaskTypeEnum(data.get("type")),
             next_run=datetime.fromisoformat(data.get("next_run"))
         )
 
