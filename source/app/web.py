@@ -1,5 +1,6 @@
 from sanic import Sanic
 import asyncpg
+from datetime import datetime
 
 from source.db.connect import get_dsn
 from source.endpoints import (
@@ -44,7 +45,8 @@ def get_app() -> Sanic:
     jinja_env = app.ext.templating.environment
     jinja_env.globals.update(
         {
-            "MAPPER_WORK_TOAD": MAPPER_WORK_TOAD
+            "MAPPER_WORK_TOAD": MAPPER_WORK_TOAD,
+            "datetime": datetime,
         }
     )
 
