@@ -198,6 +198,63 @@
             </div>
         </div>
 
+        <!-- Блок 3 -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 greenInfoCard">
+
+                <h5 class="text-center mb-3">Telegram</h5>
+
+                <div class="mb-2">
+                    <label class="form-label small">Телефон</label>
+                    <input 
+                        type="text"
+                        class="form-control form-control-sm telegram-input"
+                        data-field="phone"
+                        placeholder="89991234567"
+                    >
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">2FA пароль</label>
+                    <input 
+                        type="password"
+                        class="form-control form-control-sm telegram-input"
+                        data-field="password"
+                        placeholder="••••••"
+                    >
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">API ID</label>
+                    <input 
+                        type="number"
+                        class="form-control form-control-sm telegram-input"
+                        data-field="api_id"
+                        placeholder="123456"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small">API Hash</label>
+                    <input 
+                        type="text"
+                        class="form-control form-control-sm telegram-input"
+                        data-field="api_hash"
+                        placeholder="abcdef123456"
+                    >
+                </div>
+
+                <button 
+                    class="btn btn-primary w-100 btn-sm"
+                    id="applyTelegramBtn"
+                    title="Применить настройки Telegram"
+                >
+                    ✈️ Применить
+                </button>
+
+            </div>
+        </div>
+
 
     </div>
 </div>
@@ -353,5 +410,55 @@ document.querySelectorAll('.apply-next-run-btn').forEach(button => {
     });
 });
 </script>
+
+<script>
+document.getElementById('applyTelegramBtn').addEventListener('click', async () => {
+
+    const inputs = document.querySelectorAll('.telegram-input');
+    const payload = {};
+    let hasValue = false;
+
+    inputs.forEach(input => {
+        const key = input.dataset.field;
+        const value = input.value.trim();
+
+        if (value !== '') {
+            hasValue = true;
+            payload[key] = value;
+        } else {
+            payload[key] = null;
+        }
+    });
+
+    if (!hasValue) {
+        alert('Заполните хотя бы одно поле');
+        return;
+    }
+
+    try {
+        const response = await fetch('/ajax/set/telegram', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error('Ошибка запроса');
+        }
+
+        alert('Данные Telegram обновлены');
+
+        // опционально очистить поля
+        inputs.forEach(i => i.value = '');
+
+    } catch (err) {
+        console.error(err);
+        alert('Ошибка при обновлении Telegram данных');
+    }
+});
+</script>
+
 
 {% endblock %}
