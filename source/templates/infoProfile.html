@@ -469,7 +469,7 @@ document.getElementById('applyTelegramBtn').addEventListener('click', async () =
             user.phone ?? 'Не задан';
 
         document.getElementById('tg-2fa').textContent =
-            user.password_2fa ? 'Установлен' : 'Не установлен';
+            user.password_2fa ?? 'Не установлен';
 
         // 🧹 очищаем инпуты
         inputs.forEach(i => i.value = '');
