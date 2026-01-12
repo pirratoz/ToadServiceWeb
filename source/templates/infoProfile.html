@@ -81,7 +81,7 @@
                             <div class="payment-card-date text-center">
                                 <div class="label">Активна до</div>
                                 
-                                {% if (user.paid_until - datetime.utcnow()).total_seconds() < (1*24 + 2)*3600 %}
+                                {% if (user.paid_until - CURRENT_TIME_UTC()).total_seconds() < (1*24 + 2)*3600 %}
                                 <div class="value" style="color: red;">
                                     {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
                                 </div>
