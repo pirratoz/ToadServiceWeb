@@ -1,34 +1,53 @@
-.telegram-info-card {
-    position: relative;
-    background-color: #eef3fb; /* мягкий синеватый */
-    border: 1px solid #d6e1f2;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+.telegram-card {
+    background: linear-gradient(180deg, #eaf4ff, #dfefff);
+    border: 2px solid #6cb6ff;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.15);
 }
 
 /* Заголовок */
 .telegram-card-title {
+    font-weight: 700;
+    color: #0b5ed7;
+}
+
+/* Label у инпутов */
+.telegram-label {
     font-weight: 600;
-    color: #2c3e50;
+    color: #084298;
 }
 
-/* Иконки */
-.telegram-info-card .pc-icon {
-    position: absolute;
-    top: -14px;
-    left: -12px;
-    font-size: 26px;
+/* Input */
+.telegram-input-field {
+    border: 1.5px solid #9ecbff;
+    background-color: #f4f9ff;
+    font-weight: 600;
+    color: #083b73;
 }
 
-.telegram-info-card .disk-icon {
-    position: absolute;
-    bottom: -14px;
-    right: -12px;
-    font-size: 26px;
+.telegram-input-field::placeholder {
+    color: #7aa9dd;
+    font-weight: 500;
 }
 
-/* Список */
-.telegram-info-list li {
-    font-size: 14px;
-    color: #34495e;
-    line-height: 1.4;
+.telegram-input-field:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+    background-color: #ffffff;
+}
+
+/* Кнопка */
+.telegram-apply-btn {
+    background: linear-gradient(135deg, #0d6efd, #4dabf7);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.telegram-apply-btn:hover {
+    background: linear-gradient(135deg, #0b5ed7, #339af0);
+    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.35);
+}
+
+.telegram-apply-btn:active {
+    transform: translateY(1px);
 }
