@@ -36,3 +36,9 @@ async def handler_profile_page(request: Request):
     return await render(
         "infoProfile.html", status=200, context={"user": user, "tasks": tasks}
     )
+
+@info_pages.get("/about")
+async def handler_about_page(request: Request):
+    return await render(
+        "infoAbout.html", status=200
+    )
