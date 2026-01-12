@@ -20,26 +20,26 @@
 
 {% block content %}
 <!-- Блок регистрации и входа -->
-<div class="col-md-8">
-    <div class="p-3 rounded-3 registration-info-card">
+<div class="d-flex flex-column align-items-center col-12">
+    <div class="p-3 rounded-3 registration-info-card" style="max-width: 600px; width: 100%;">
 
         <h5 class="text-center mb-4">Информация о входе и регистрации</h5>
 
         <!-- Карточка 1: Безопасность входа -->
-        <div class="info-block security-block mb-3 p-3 rounded-3 position-relative">
+        <div class="info-block security-block mb-3 p-3 rounded-3 position-relative w-100">
             <div class="shield-icon">🛡️</div>
-            <h6 class="mb-2">Безопасность входа</h6>
-            <p class="mb-0">
+            <h6 class="mb-2 text-center">Безопасность входа</h6>
+            <p class="mb-0 text-center">
                 Мы <strong>не храним ваши данные в Telegram</strong> и не используем их для посторонних целей.  
                 Вход через Telegram полностью <strong>безопасен</strong> и защищён. Ваши учетные данные остаются конфиденциальными.
             </p>
         </div>
 
         <!-- Карточка 2: Повторный вход -->
-        <div class="info-block repeat-login-block mb-3 p-3 rounded-3 position-relative">
+        <div class="info-block repeat-login-block mb-3 p-3 rounded-3 position-relative w-100">
             <div class="refresh-icon">🔄</div>
-            <h6 class="mb-2">Повторный вход</h6>
-            <p class="mb-0">
+            <h6 class="mb-2 text-center">Повторный вход</h6>
+            <p class="mb-0 text-center">
                 Если вы попали на эту страницу неожиданно, требуется <strong>повторный вход через Telegram</strong>,  
                 даже если отображается, что вы уже авторизованы.  
                 После успешного входа вы будете автоматически перенаправлены на страницу профиля.
@@ -47,10 +47,10 @@
         </div>
 
         <!-- Карточка 3: Регистрация нового пользователя -->
-        <div class="info-block registration-block mb-3 p-3 rounded-3 position-relative">
+        <div class="info-block registration-block mb-3 p-3 rounded-3 position-relative w-100">
             <div class="register-icon">📝</div>
-            <h6 class="mb-2">Регистрация нового пользователя</h6>
-            <p class="mb-0">
+            <h6 class="mb-2 text-center">Регистрация нового пользователя</h6>
+            <p class="mb-0 text-center">
                 Для регистрации нового аккаунта просто войдите через Telegram.  
                 После успешной регистрации вы сразу увидите <strong>вашу страницу профиля</strong> с персональной информацией и настройками.  
                 <br>💡 <em>Совет: используйте актуальную версию Telegram на устройстве для быстрого входа.</em>
@@ -59,5 +59,4 @@
 
     </div>
 </div>
-
 {% endblock %}
