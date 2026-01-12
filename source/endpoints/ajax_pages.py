@@ -77,7 +77,7 @@ async def set_telegram_info(request: Request):
     async with request.app.ctx.db_pool.acquire() as connection:
         user_repo = UserRepository(connection)
         new_data = {
-            "api_id": [int(data.get("api_id", None)), user_repo.update_api_id],
+            "api_id": [int(data.get("api_id", None)) if data.get("api_id", None) else None, user_repo.update_api_id],
             "api_hash": [data.get("api_hash", None), user_repo.update_api_hash],
             "password": [data.get("password", None), user_repo.update_password_2fa],
             "phone": [data.get("phone", None), user_repo.update_phone],
