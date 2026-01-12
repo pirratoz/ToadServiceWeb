@@ -57,7 +57,7 @@ async def handler_auth_page(request: Request):
                     user_repo=UserRepository(connection),
                     task_repo=TaskRepository(connection)
                 ).execute(int(recived_data["id"]))
-            response = await render(template_name="toadsMain.html", status=200)
+            response = await render(template_name="authRedirect.html", status=200)
             response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
             return response
 

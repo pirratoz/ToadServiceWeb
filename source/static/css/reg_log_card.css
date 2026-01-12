@@ -1,0 +1,45 @@
+/* Общие стили для блока регистрации */
+.registration-info-card {
+    background-color: #f3f6fd;
+    border: 1px solid #c3d1f0;
+}
+
+/* Общие стили для карточек */
+.info-block {
+    background-color: #ffffff;
+    border: 1px solid #d0d7e9;
+    padding: 1rem;
+    position: relative;
+}
+
+.info-block h6 {
+    font-weight: 600;
+}
+
+/* Иконки слева сверху */
+.security-block .shield-icon,
+.repeat-login-block .refresh-icon,
+.registration-block .register-icon {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    font-size: 1.8rem;
+}
+
+.security-block {
+    border-left: 4px solid #4caf50;
+}
+
+.repeat-login-block {
+    border-left: 4px solid #ff9800;
+}
+
+.registration-block {
+    border-left: 4px solid #2196f3;
+}
+
+/* Текст */
+.info-block p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}

@@ -1,0 +1,10 @@
+{% extends "web.html" %}
+{% block title %}Toads Auth Redirect{% endblock %}
+
+{% block content %}
+<p>Перенаправление на <a href="/info/profile">профиль</a>...</p>
+
+<script>
+    window.location.href = "/info/profile";
+</script>
+{% endblock %}
