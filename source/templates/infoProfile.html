@@ -81,7 +81,7 @@
                             <div class="payment-card-date text-center">
                                 <div class="label">Активна до</div>
                                 
-                                {% set time_diff = (user.paid_until - CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
+                                {% set time_diff = (user.paid_until - FUNC_CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
                                 {% if time_diff < 0 %}
                                     <div class="value" style="color: #5900ff;">
                                         {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }} (Истекла)

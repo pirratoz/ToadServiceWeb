@@ -49,7 +49,7 @@ def get_app() -> Sanic:
     jinja_env.globals.update(
         {
             "MAPPER_WORK_TOAD": MAPPER_WORK_TOAD,
-            "CURRENT_TIME_UTC": lambda : datetime.now(timezone.utc),
+            "FUNC_CURRENT_TIME_UTC": lambda : datetime.now(timezone.utc),
         }
     )
 
