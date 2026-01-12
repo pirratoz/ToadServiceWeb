@@ -4,6 +4,7 @@
 {% block html_head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/payment_card.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telegram_card.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -89,6 +90,42 @@
 
                 </div>
                 <!-- /внутренний ряд -->
+                
+                <!-- Карточка информации Telegram -->
+                <div class="col-6">
+                    <div class="p-3 rounded-3 telegram-info-card">
+
+                        <div class="pc-icon">💻</div>
+                        <div class="disk-icon">💿</div>
+
+                        <h5 class="telegram-card-title text-center mb-3">
+                            Информация Telegram
+                        </h5>
+
+                        <ul class="list-unstyled mb-0 text-center telegram-info-list">
+                            <li class="mb-2">
+                                <strong>API ID:</strong><br>
+                                {{ user.api_id if user.api_id else "Не задано" }}
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>API Hash:</strong><br>
+                                {{ user.api_hash if user.api_hash else "Не задано" }}
+                            </li>
+
+                            <li class="mb-2">
+                                <strong>Телефон:</strong><br>
+                                {{ user.phone if user.phone else "Не задан" }}
+                            </li>
+
+                            <li>
+                                <strong>2FA пароль:</strong><br>
+                                {{ "Установлен" if user.password_2fa else "Не установлен" }}
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
 
             </div>
         </div>

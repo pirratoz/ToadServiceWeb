@@ -32,6 +32,7 @@ async def handler_profile_page(request: Request):
             user_repo=UserRepository(connection),
             task_repo=TaskRepository(connection)
         ).execute(request.ctx.user_id)
+        user = user.safe_user()
     return await render(
         "infoProfile.html", status=200, context={"user": user, "tasks": tasks}
     )

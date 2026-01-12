@@ -1,0 +1,34 @@
+.telegram-info-card {
+    position: relative;
+    background-color: #eef3fb; /* мягкий синеватый */
+    border: 1px solid #d6e1f2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Заголовок */
+.telegram-card-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Иконки */
+.telegram-info-card .pc-icon {
+    position: absolute;
+    top: -14px;
+    left: -12px;
+    font-size: 26px;
+}
+
+.telegram-info-card .disk-icon {
+    position: absolute;
+    bottom: -14px;
+    right: -12px;
+    font-size: 26px;
+}
+
+/* Список */
+.telegram-info-list li {
+    font-size: 14px;
+    color: #34495e;
+    line-height: 1.4;
+}

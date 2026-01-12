@@ -1,5 +1,6 @@
 from datetime import datetime
 from dataclasses import dataclass
+from copy import deepcopy
 
 from asyncpg import Record
 
@@ -45,6 +46,12 @@ class UserInfo:
             "chat_title": self.chat_title,
             "api_id": self.api_id,
             "api_hash": self.api_hash,
-            "phone": self.phone,
+            "phone": "*" * len(self.phone or "*****"),
             "password_2fa": "*" * len(self.password_2fa or "*****")
         }
+    
+    def safe_user(self) -> "UserInfo":
+        user = deepcopy(self)
+        user.phone = f"{self.phone[:4]}{'*' * len(self.phone[4:-2])}{self.phone[-2:]}"
+        user.password_2fa = "*" * len(self.password_2fa or "*****")
+        return
