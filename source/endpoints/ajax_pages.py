@@ -68,3 +68,23 @@ async def set_next_run(request: Request):
         )
 
     return json({"info": info.dump()})
+
+
+@ajax_page.post("/set/telegram")
+@jwt_auth_required
+async def set_telegram_info(request: Request):
+    data = request.json
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user_repo = UserRepository(connection)
+        new_data = {
+            "api_id": [data.get("api_id", None), user_repo.update_api_id],
+            "api_hash": [data.get("api_hash", None), user_repo.update_api_hash],
+            "password": [data.get("password", None), user_repo.update_password_2fa],
+            "phone": [data.get("phone", None), user_repo.update_phone],
+        }
+        for key, value in new_data.items():
+            if not value[0]:
+                continue
+            info = await value[1](request.ctx.user_id, value[0])
+
+    return json({"info": info.dump()})
