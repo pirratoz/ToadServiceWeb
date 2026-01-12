@@ -81,14 +81,19 @@
                             <div class="payment-card-date text-center">
                                 <div class="label">Активна до</div>
                                 
-                                {% if (user.paid_until - CURRENT_TIME_UTC()).total_seconds() < (1*24 + 2)*3600 %}
-                                <div class="value" style="color: red;">
-                                    {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
-                                </div>
+                                {% set time_diff = (user.paid_until - CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
+                                {% if time_diff < 0 %}
+                                    <div class="value" style="color: #5900ff;">
+                                        {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }} (Истекла)
+                                    </div>
+                                {% elif time_diff < 93600 %} {# 93600 сек = 26 часов (1 день + 2 часа) #}
+                                    <div class="value" style="color: red;">
+                                        {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                                    </div>
                                 {% else %}
-                                <div class="value" style="color: green;">
-                                    {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
-                                </div>
+                                    <div class="value" style="color: green;">
+                                        {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                                    </div>
                                 {% endif %}
 
                             </div>
