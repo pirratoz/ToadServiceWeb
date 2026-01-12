@@ -13,6 +13,10 @@ class UserInfo:
     paid_until: datetime
     chat_id: int
     chat_title: str
+    api_id: int
+    api_hash: str
+    phone: str
+    password_2fa: str
 
     @staticmethod
     def load_from_record(record: Record) -> "UserInfo":
@@ -23,7 +27,11 @@ class UserInfo:
             is_calculate=record["is_calculate"],
             paid_until=record["paid_until"],
             chat_id=record["chat_id"],
-            chat_title=record["chat_title"]
+            chat_title=record["chat_title"],
+            api_id=record["api_id"],
+            api_hash=record["api_hash"],
+            phone=record["phone"],
+            password_2fa=record["password_2fa"]
         )
 
     def dump(self) -> dict:
@@ -35,4 +43,8 @@ class UserInfo:
             "paid_until": self.paid_until.isoformat(),
             "chat_id": self.chat_id,
             "chat_title": self.chat_title,
+            "api_id": self.api_id,
+            "api_hash": self.api_hash,
+            "phone": self.phone,
+            "password_2fa": "*" * len(self.password_2fa or "*****")
         }

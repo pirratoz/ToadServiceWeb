@@ -28,6 +28,46 @@ class UserRepository(BaseRepository):
         record = await self.connection.fetchrow("INSERT INTO users (id, paid_until) VALUES ($1, $2) RETURNING *", user_id, paid_until)
         return UserInfo.load_from_record(record)
 
+    async def update_api_id(self, user_id: int, api_id: int) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET api_id = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, api_id, user_id)
+        return UserInfo.load_from_record(record)
+    
+    async def update_api_hash(self, user_id: int, api_hash: str) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET api_hash = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, api_hash, user_id)
+        return UserInfo.load_from_record(record)
+    
+    async def update_phone(self, user_id: int, phone: str) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET phone = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, phone, user_id)
+        return UserInfo.load_from_record(record)
+    
+    async def update_password_2fa(self, user_id: int, password_2fa: str) -> UserInfo:
+        sql = """
+        UPDATE users
+        SET password_2fa = $1
+        WHERE id = $2
+        RETURNING *
+        """
+        record = await self.connection.fetchrow(sql, password_2fa, user_id)
+        return UserInfo.load_from_record(record)
+
     async def update_chat_id(self, user_id: int, chat_id: int) -> UserInfo:
         sql = """
         UPDATE users
