@@ -105,23 +105,32 @@
                     <ul class="list-unstyled mb-0 text-center telegram-info-list">
                         <li class="mb-2">
                             <strong>API ID:</strong><br>
-                            {{ user.api_id if user.api_id else "Не задано" }}
+                            <span id="tg-api-id">
+                                {{ user.api_id if user.api_id else "Не задано" }}
+                            </span>
                         </li>
 
                         <li class="mb-2">
                             <strong>API Hash:</strong><br>
-                            {{ user.api_hash if user.api_hash else "Не задано" }}
+                            <span id="tg-api-hash">
+                                {{ user.api_hash if user.api_hash else "Не задано" }}
+                            </span>
                         </li>
 
                         <li class="mb-2">
                             <strong>Телефон:</strong><br>
-                            {{ user.phone if user.phone else "Не задан" }}
+                            <span id="tg-phone">
+                                {{ user.phone if user.phone else "Не задан" }}
+                            </span>
                         </li>
 
                         <li>
                             <strong>2FA пароль:</strong><br>
-                            {{ "Установлен" if user.password_2fa else "Не установлен" }}
+                            <span id="tg-2fa">
+                                {{ "Установлен" if user.password_2fa else "Не установлен" }}
+                            </span>
                         </li>
+
                     </ul>
 
                 </div>
@@ -438,9 +447,7 @@ document.getElementById('applyTelegramBtn').addEventListener('click', async () =
     try {
         const response = await fetch('/ajax/set/telegram', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
@@ -448,10 +455,26 @@ document.getElementById('applyTelegramBtn').addEventListener('click', async () =
             throw new Error('Ошибка запроса');
         }
 
-        alert('Данные Telegram обновлены');
+        const data = await response.json();
+        const user = data.info; // 👈 твой return
 
-        // опционально очистить поля
+        // 🔄 Обновляем карточку Telegram
+        document.getElementById('tg-api-id').textContent =
+            user.api_id ?? 'Не задано';
+
+        document.getElementById('tg-api-hash').textContent =
+            user.api_hash ?? 'Не задано';
+
+        document.getElementById('tg-phone').textContent =
+            user.phone ?? 'Не задан';
+
+        document.getElementById('tg-2fa').textContent =
+            user.password_2fa ? 'Установлен' : 'Не установлен';
+
+        // 🧹 очищаем инпуты
         inputs.forEach(i => i.value = '');
+
+        alert('Данные Telegram обновлены');
 
     } catch (err) {
         console.error(err);
@@ -459,6 +482,7 @@ document.getElementById('applyTelegramBtn').addEventListener('click', async () =
     }
 });
 </script>
+
 
 
 {% endblock %}

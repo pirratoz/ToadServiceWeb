@@ -35,23 +35,30 @@ class UserInfo:
             password_2fa=record["password_2fa"]
         )
 
-    def dump(self) -> dict:
+    def dump(self, safe: bool | None = None) -> dict:
+        """
+        safe: default = True
+        """
+        if not safe:
+            safe = True
+        user = self.safe_user() if safe else self
         return {
-            "id": self.id,
-            "is_banned": self.is_banned,
-            "is_vip": self.is_vip,
-            "is_calculate": self.is_calculate,
-            "paid_until": self.paid_until.isoformat(),
-            "chat_id": self.chat_id,
-            "chat_title": self.chat_title,
-            "api_id": self.api_id,
-            "api_hash": self.api_hash,
-            "phone": "*" * len(self.phone or "*****"),
-            "password_2fa": "*" * len(self.password_2fa or "*****")
+            "id": user.id,
+            "is_banned": user.is_banned,
+            "is_vip": user.is_vip,
+            "is_calculate": user.is_calculate,
+            "paid_until": user.paid_until.isoformat(),
+            "chat_id": user.chat_id,
+            "chat_title": user.chat_title,
+            "api_id": user.api_id,
+            "api_hash": user.api_hash,
+            "phone": user.phone,
+            "password_2fa": user.password_2fa
         }
     
     def safe_user(self) -> "UserInfo":
         user = deepcopy(self)
+        user.api_hash = f"{self.api_hash[:4]}{'*' * 12}{self.api_hash[-4:]}" if self.api_hash else None
         user.phone = f"{self.phone[:4]}{'*' * len(self.phone[4:-2])}{self.phone[-2:]}" if self.phone else None
         user.password_2fa = "*" * len(self.password_2fa) if self.password_2fa else None
         return user
