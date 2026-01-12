@@ -12,12 +12,12 @@ class UserInfo:
     is_vip: bool
     is_calculate: bool
     paid_until: datetime
-    chat_id: int
-    chat_title: str
-    api_id: int
-    api_hash: str
-    phone: str
-    password_2fa: str
+    chat_id: int | None
+    chat_title: str | None
+    api_id: int | None
+    api_hash: str | None
+    phone: str | None
+    password_2fa: str | None
 
     @staticmethod
     def load_from_record(record: Record) -> "UserInfo":
@@ -52,6 +52,6 @@ class UserInfo:
     
     def safe_user(self) -> "UserInfo":
         user = deepcopy(self)
-        user.phone = f"{self.phone[:4]}{'*' * len(self.phone[4:-2])}{self.phone[-2:]}"
-        user.password_2fa = "*" * len(self.password_2fa or "*****")
-        return
+        user.phone = f"{self.phone[:4]}{'*' * len(self.phone[4:-2])}{self.phone[-2:]}" if self.phone else None
+        user.password_2fa = "*" * len(self.password_2fa) if self.password_2fa else None
+        return user
