@@ -4,6 +4,7 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
     const statusDot = document.querySelector('.status-dot');
     const messageBox = document.querySelector('.bot-message');
 
+    const payload = {};
     // определяем текущее действие
     const isRunning = btn.classList.contains('btn-stop');
     const url = '/ajax/bot/turn';
@@ -14,10 +15,13 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
     messageBox.className = 'bot-message info';
     messageBox.innerText = 'Отправляем команду боту...';
 
+    payload["status"] = isRunning;
+
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
 
         const data = await response.json();

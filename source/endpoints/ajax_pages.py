@@ -88,3 +88,44 @@ async def set_telegram_info(request: Request):
             info = await value[1](request.ctx.user_id, value[0])
 
     return json({"info": info.dump()})
+
+@ajax_page.post("/bot/turn")
+@jwt_auth_required
+async def set_telegram_turn(request: Request):
+    data = request.json
+
+    running = False
+    message = ""
+    message_type = "info"
+
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user_repo = UserRepository(connection)
+        user = await user_repo.get_user_by_id(request.ctx.user_id)
+
+        if not user.api_id:
+            message_type = "warning"
+            message += "Установите - API ID\n"
+        
+        if not user.api_hash:
+            message_type = "warning"
+            message += "Установите - API HASH\n"
+
+        if not user.phone:
+            message_type = "warning"
+            message += "Установите - PHONE\n"
+
+    """
+    {
+        running: true|false,
+        message: "текст",
+        message_type: "success|error|warning|info"
+    }
+    """
+    return json({
+        {
+            running: running,
+            message: message,
+            message_type: message_type
+        }
+    })
+    
