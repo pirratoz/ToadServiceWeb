@@ -62,7 +62,7 @@ async def handler_bot_page(request: Request):
 
     bot_is_running = False
     try:
-        if await client.authorize():
+        if client.is_connected:
             bot_is_running = True
     except:
         pass
