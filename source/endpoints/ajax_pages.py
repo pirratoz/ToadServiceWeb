@@ -121,11 +121,11 @@ async def set_telegram_turn(request: Request):
         message_type: "success|error|warning|info"
     }
     """
-    return json({
+    return json(
         {
             running: running,
             message: message,
             message_type: message_type
         }
-    })
+    )
     
