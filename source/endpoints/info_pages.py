@@ -24,6 +24,7 @@ async def handler_registration_page(request: Request):
         "infoRegistration.html", status=200
     )
 
+
 @info_pages.get("/profile")
 @jwt_auth_required
 async def handler_profile_page(request: Request):
@@ -37,8 +38,23 @@ async def handler_profile_page(request: Request):
         "infoProfile.html", status=200, context={"user": user, "tasks": tasks}
     )
 
+
 @info_pages.get("/about")
 async def handler_about_page(request: Request):
     return await render(
         "infoAbout.html", status=200
+    )
+
+
+@info_pages.get("/bot")
+@jwt_auth_required
+async def handler_bot_page(request: Request):
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user, tasks = await GetProfileUserUseCase(
+            user_repo=UserRepository(connection),
+            task_repo=TaskRepository(connection)
+        ).execute(request.ctx.user_id)
+        user = user.safe_user()
+    return await render(
+        "infoBot.html", status=200, context={"user": user}
     )
