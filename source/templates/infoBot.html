@@ -2,6 +2,7 @@
 {% block title %}Telegram Bot{% endblock %}
 
 {% block html_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/telegram_card.css') }}">
 {% endblock %}
 
 {% block telegram_auth %}
@@ -93,5 +94,5 @@
 {% endblock %}
 
 {% block scripts_js %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/telegram_card.css') }}">
+    <script src="{{ url_for('static', filename='js/telegram_bot_run.js') }}"></script>
 {% endblock %}
