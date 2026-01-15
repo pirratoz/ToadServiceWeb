@@ -136,7 +136,7 @@ async def set_telegram_turn(request: Request):
             password_2fa=str(user.password_2fa),
             phone=user.phone
         )
-        status = await AuthInfoClass.is_auth()
+        status = await AuthInfoClass.is_auth(request.ctx.user_id)
         if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
             message_type = "success"
             message = "Бот запущен!"
