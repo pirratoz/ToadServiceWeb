@@ -58,11 +58,14 @@ async def handler_bot_page(request: Request):
         ).execute(request.ctx.user_id)
         user = user.safe_user()
     
-    bot = AuthInfoClass.get_client(request.ctx.user_id)
+    client = AuthInfoClass.get_client(request.ctx.user_id)
 
     bot_is_running = False
-    if bot:
-        bot_is_running = True
+    try:
+        if client.authorize():
+            bot_is_running = True
+    except:
+        pass
 
     return await render(
         "infoBot.html", status=200, context={"user": user, "bot_is_running": bot_is_running}

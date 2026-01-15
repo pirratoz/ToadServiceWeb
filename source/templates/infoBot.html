@@ -13,84 +13,101 @@
 <div class="container mt-4">
     <div class="row g-4">
         <div class="col-12">
-                <div class="p-3 rounded-3 telegram-info-card">
+            <div class="p-3 rounded-3 telegram-info-card">
 
-                    <div class="pc-icon">💻</div>
-                    <div class="disk-icon">💿</div>
+                <div class="pc-icon">💻</div>
+                <div class="disk-icon">💿</div>
 
-                    <h5 class="telegram-card-title text-center mb-3">
-                        Информация Telegram
-                    </h5>
+                <h5 class="telegram-card-title text-center mb-3">
+                    Информация Telegram
+                </h5>
 
-                    <ul class="list-unstyled mb-0 text-center telegram-info-list">
-                        <li class="mb-2">
-                            <strong>API ID:</strong><br>
-                            <span id="tg-api-id">
-                                {{ user.api_id if user.api_id else "Не задано" }}
-                            </span>
-                        </li>
-
-                        <li class="mb-2">
-                            <strong>API Hash:</strong><br>
-                            <span id="tg-api-hash">
-                                {{ user.api_hash if user.api_hash else "Не задано" }}
-                            </span>
-                        </li>
-
-                        <li class="mb-2">
-                            <strong>Телефон:</strong><br>
-                            <span id="tg-phone">
-                                {{ user.phone if user.phone else "Не задан" }}
-                            </span>
-                        </li>
-
-                        <li>
-                            <strong>2FA пароль:</strong><br>
-                            <span id="tg-2fa">
-                                {{user.password_2fa if user.password_2fa else "Не установлен" }}
-                            </span>
-                        </li>
-
-                    </ul>
-
-                </div>
-            </div>
-
-            <!-- Блок управления Telegram ботом -->
-            <div class="col-md-4">
-                <div class="telegram-bot-card p-3 rounded-3">
-
-                    <h5 class="text-center mb-3 telegram-bot-title">
-                        Telegram бот
-                    </h5>
-
-                    <!-- Статус бота -->
-                    <div class="bot-status mb-3 text-center">
-                        <span class="status-dot {{ 'online' if bot_is_running else 'offline' }}"></span>
-                        <span class="status-text">
-                            {{ "Работает" if bot_is_running else "Остановлен" }}
+                <ul class="list-unstyled mb-0 text-center telegram-info-list">
+                    <li class="mb-2">
+                        <strong>API ID:</strong><br>
+                        <span id="tg-api-id">
+                            {{ user.api_id if user.api_id else "Не задано" }}
                         </span>
-                    </div>
+                    </li>
 
-                    <!-- Кнопка управления -->
-                    <button
-                        class="btn bot-toggle-btn w-100 mb-3
-                            {{ 'btn-stop' if bot_is_running else 'btn-start' }}"
-                        id="toggleBotBtn"
-                    >
-                        {{ "⛔ Остановить бота" if bot_is_running else "▶️ Запустить бота" }}
-                    </button>
+                    <li class="mb-2">
+                        <strong>API Hash:</strong><br>
+                        <span id="tg-api-hash">
+                            {{ user.api_hash if user.api_hash else "Не задано" }}
+                        </span>
+                    </li>
 
-                    <!-- Статусное сообщение -->
-                    <div class="bot-message info">
-                        Статус...
-                    </div>
+                    <li class="mb-2">
+                        <strong>Телефон:</strong><br>
+                        <span id="tg-phone">
+                            {{ user.phone if user.phone else "Не задан" }}
+                        </span>
+                    </li>
 
-                </div>
+                    <li>
+                        <strong>2FA пароль:</strong><br>
+                        <span id="tg-2fa">
+                            {{user.password_2fa if user.password_2fa else "Не установлен" }}
+                        </span>
+                    </li>
+
+                </ul>
+
             </div>
+        </div>
 
-    </div>
-</div>
+        <!-- Блок управления Telegram ботом -->
+        <div class="col-md-4">
+            <div class="telegram-bot-card p-3 rounded-3">
+
+                <h5 class="text-center mb-3 telegram-bot-title">
+                    Telegram бот
+                </h5>
+
+                <!-- Статус бота -->
+                <div class="bot-status mb-3 text-center">
+                    <span class="status-dot {{ 'online' if bot_is_running else 'offline' }}"></span>
+                    <span class="status-text">
+                        {{ "Работает" if bot_is_running else "Остановлен" }}
+                    </span>
+                </div>
+
+                <!-- Кнопка управления -->
+                <button
+                    class="btn bot-toggle-btn w-100 mb-3
+                        {{ 'btn-stop' if bot_is_running else 'btn-start' }}"
+                    id="toggleBotBtn"
+                >
+                    {{ "⛔ Остановить бота" if bot_is_running else "▶️ Запустить бота" }}
+                </button>
+
+                <!-- Поле ввода кода -->
+                <div class="mb-2">
+                    <label class="form-label small fw-semibold">Код подтверждения</label>
+                    <input
+                        type="text"
+                        class="form-control form-control-sm bot-code-input"
+                        id="botCodeInput"
+                        placeholder="Введите код из Telegram"
+                    >
+                </div>
+
+                <!-- Кнопка подтверждения кода -->
+                <button
+                    class="btn btn-primary btn-sm w-100 mb-3"
+                    id="applyBotCodeBtn"
+                >
+                    ✈️ Подтвердить код
+                </button>
+
+                <!-- Статусное сообщение -->
+                <div class="bot-message info" id="botCodeMessage">
+                    Статус...
+                </div>
+
+            </div>
+        </div>
+
 
 {% endblock %}
 

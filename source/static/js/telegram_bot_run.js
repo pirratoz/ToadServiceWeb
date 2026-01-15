@@ -66,3 +66,49 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
         btn.disabled = false;
     }
 });
+
+document.getElementById('applyBotCodeBtn').addEventListener('click', async () => {
+    const codeInput = document.getElementById('botCodeInput');
+    const message = document.getElementById('botCodeMessage');
+    const code = codeInput.value.trim();
+    const payload = {};
+
+    payload["code"] = code;
+
+    message.textContent = '';
+    message.className = 'bot-message';
+
+    if (!code) {
+        message.textContent = 'Введите код подтверждения';
+        message.classList.add('error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/ajax/bot/code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Ошибка при запуске бота');
+        }
+
+        if (data.running) {
+            message.textContent = 'Бот успешно запущен';
+            message.classList.add('success');
+            codeInput.value = '';
+        } else {
+            message.textContent = data.message || 'Не удалось запустить бота';
+            message.classList.add('error');
+        }
+
+    } catch (err) {
+        console.error(err);
+        message.textContent = err.message;
+        message.classList.add('error');
+    }
+});

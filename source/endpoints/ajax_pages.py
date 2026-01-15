@@ -14,6 +14,9 @@ from source.db.repositories import (
     UserRepository,
     TaskRepository,
 )
+from toad_bot.storage import AuthInfoClass
+from toad_bot.enums import AuthInfoEnum
+
 
 ajax_page = Blueprint(
     name="Ajax",
@@ -121,11 +124,88 @@ async def set_telegram_turn(request: Request):
         message_type: "success|error|warning|info"
     }
     """
+
+    if message_type == "info":
+        client = AuthInfoClass.get_client(request.ctx.user_id)
+        if client:
+            await client.disconnect()
+        client = AuthInfoClass.add_client(
+            user_id=request.ctx.user_id,
+            api_id=user.api_id,
+            api_hash=user.api_hash,
+            password_2fa=str(user.password_2fa),
+            phone=user.phone
+        )
+        status = await AuthInfoClass.is_auth()
+        if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
+            message_type = "success"
+            message = "Бот запущен!"
+            running = True
+        else:
+            await AuthInfoClass.auth_send_key(request.ctx.user_id)
+            if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
+                message = "Введите код из Telegram!"
+            else:
+                message = "Неизвестная ошибка при получении ключа!"
+                message_type = "warning"
+
     return json(
         {
-            running: running,
-            message: message,
-            message_type: message_type
+            "running": running,
+            "message": message,
+            "message_type": message_type
         }
     )
+
+@ajax_page.post("/bot/code")
+@jwt_auth_required
+async def set_telegram_code(request: Request):
+    data = request.json
+
+    running = False
+    message = ""
+    message_type = "info"
+
+    server_data = {
+        "running": running,
+        "message": message,
+        "message_type": message_type
+    }
+
+    client = AuthInfoClass.get_client(request.ctx.user_id)
+
+    if not client:
+        message += "Вы не запустили бота\n"
+        message_type = "warning"
+        return json(server_data)
     
+    hash_code = AuthInfoClass.get_hash_code(request.ctx.user_id)
+    
+    if not hash_code:
+        message += "Хэш не найден, попробуйте запустить бота снова!"
+        message_type = "warning"
+        return json(server_data)
+    
+    status = await AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
+
+    if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
+        message = "Бот запущен!"
+        message_type = "success"
+        running = True
+    elif status == AuthInfoEnum.CLIENT_PHONE_CODE_EXPIRED:
+        message = "Код просрочен, перезапустите бота!"
+        message_type = "warning"
+    elif status == AuthInfoEnum.CLIENT_PASSWORD_INVALID:
+        message = "2fa пароль - неверный"
+        message_type = "warning"
+    else:
+        message = "Произошла ошибка, попробуйте ещё раз или сообщите админу"
+        message_type = "warning"
+
+    return json(
+        {
+            "running": running,
+            "message": message,
+            "message_type": message_type
+        }
+    )
