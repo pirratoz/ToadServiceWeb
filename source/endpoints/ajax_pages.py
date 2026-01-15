@@ -142,7 +142,7 @@ async def set_telegram_turn(request: Request):
             message = "Бот запущен!"
             running = True
         else:
-            await AuthInfoClass.auth_send_key(request.ctx.user_id)
+            status = await AuthInfoClass.auth_send_key(request.ctx.user_id)
             if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
                 message = "Введите код из Telegram!"
             else:
