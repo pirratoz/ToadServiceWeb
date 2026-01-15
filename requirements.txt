@@ -22,4 +22,4 @@ typing_extensions==4.15.0
 ujson==5.11.0
 uvloop==0.22.1
 websockets==15.0.1
-git+https://github.com/pirratoz/ToadBot
+git+https://github.com/pirratoz/ToadBot@46ef800b4023c2e27c896662c329149c9861c042
