@@ -65,24 +65,24 @@
 
                     <!-- Статус бота -->
                     <div class="bot-status mb-3 text-center">
-                        <span class="status-dot {{ 'online' if bot.is_running else 'offline' }}"></span>
+                        <span class="status-dot {{ 'online' if bot_is_running else 'offline' }}"></span>
                         <span class="status-text">
-                            {{ "Работает" if bot.is_running else "Остановлен" }}
+                            {{ "Работает" if bot_is_running else "Остановлен" }}
                         </span>
                     </div>
 
                     <!-- Кнопка управления -->
                     <button
                         class="btn bot-toggle-btn w-100 mb-3
-                            {{ 'btn-stop' if bot.is_running else 'btn-start' }}"
+                            {{ 'btn-stop' if bot_is_running else 'btn-start' }}"
                         id="toggleBotBtn"
                     >
-                        {{ "⛔ Остановить бота" if bot.is_running else "▶️ Запустить бота" }}
+                        {{ "⛔ Остановить бота" if bot_is_running else "▶️ Запустить бота" }}
                     </button>
 
                     <!-- Статусное сообщение -->
-                    <div class="bot-message {{ bot.message_type if bot.message_type else 'info' }}">
-                        {{ bot.message if bot.message else "Бот готов к запуску" }}
+                    <div class="bot-message info">
+                        Статус...
                     </div>
 
                 </div>
