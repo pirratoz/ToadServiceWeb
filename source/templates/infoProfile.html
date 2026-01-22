@@ -105,49 +105,49 @@
                 <!-- /внутренний ряд -->
                 
                 <!-- Карточка информации Telegram -->
-            <div class="col-12">
-                <div class="p-3 rounded-3 telegram-info-card">
+                <div class="col-12">
+                    <div class="p-3 rounded-3 telegram-info-card">
 
-                    <div class="pc-icon">💻</div>
-                    <div class="disk-icon">💿</div>
+                        <div class="pc-icon">💻</div>
+                        <div class="disk-icon">💿</div>
 
-                    <h5 class="telegram-card-title text-center mb-3">
-                        Информация Telegram
-                    </h5>
+                        <h5 class="telegram-card-title text-center mb-3">
+                            Информация Telegram
+                        </h5>
 
-                    <ul class="list-unstyled mb-0 text-center telegram-info-list">
-                        <li class="mb-2">
-                            <strong>API ID:</strong><br>
-                            <span id="tg-api-id">
-                                {{ user.api_id if user.api_id else "Не задано" }}
-                            </span>
-                        </li>
+                        <ul class="list-unstyled mb-0 text-center telegram-info-list">
+                            <li class="mb-2">
+                                <strong>API ID:</strong><br>
+                                <span id="tg-api-id">
+                                    {{ user.api_id if user.api_id else "Не задано" }}
+                                </span>
+                            </li>
 
-                        <li class="mb-2">
-                            <strong>API Hash:</strong><br>
-                            <span id="tg-api-hash">
-                                {{ user.api_hash if user.api_hash else "Не задано" }}
-                            </span>
-                        </li>
+                            <li class="mb-2">
+                                <strong>API Hash:</strong><br>
+                                <span id="tg-api-hash">
+                                    {{ user.api_hash if user.api_hash else "Не задано" }}
+                                </span>
+                            </li>
 
-                        <li class="mb-2">
-                            <strong>Телефон:</strong><br>
-                            <span id="tg-phone">
-                                {{ user.phone if user.phone else "Не задан" }}
-                            </span>
-                        </li>
+                            <li class="mb-2">
+                                <strong>Телефон:</strong><br>
+                                <span id="tg-phone">
+                                    {{ user.phone if user.phone else "Не задан" }}
+                                </span>
+                            </li>
 
-                        <li>
-                            <strong>2FA пароль:</strong><br>
-                            <span id="tg-2fa">
-                                {{user.password_2fa if user.password_2fa else "Не установлен" }}
-                            </span>
-                        </li>
+                            <li>
+                                <strong>2FA пароль:</strong><br>
+                                <span id="tg-2fa">
+                                    {{user.password_2fa if user.password_2fa else "Не установлен" }}
+                                </span>
+                            </li>
 
-                    </ul>
+                        </ul>
 
+                    </div>
                 </div>
-            </div>
 
             </div>
         </div>
