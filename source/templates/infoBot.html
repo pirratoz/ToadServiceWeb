@@ -4,6 +4,7 @@
 {% block html_head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telegram_card.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/telegram_bot_card.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/payment_card.css') }}">
 {% endblock %}
 
 {% block telegram_auth %}
@@ -12,7 +13,40 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row g-4">
-        <div class="col-12">
+        <!-- Карточка Оплата -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 payment-card">
+
+                <div class="frog-icon">🐸</div>
+                <div class="tree-icon">🌳</div>
+
+                <h5 class="payment-card-title text-center mb-3">
+                    Оплата
+                </h5>
+
+                <div class="payment-card-date text-center">
+                    <div class="label">Активна до</div>
+                    
+                    {% set time_diff = (user.paid_until - FUNC_CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
+                    {% if time_diff < 0 %}
+                        <div class="value" style="color: #5900ff;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }} (Истекла)
+                        </div>
+                    {% elif time_diff < 93600 %} {# 93600 сек = 26 часов (1 день + 2 часа) #}
+                        <div class="value" style="color: red;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                        </div>
+                    {% else %}
+                        <div class="value" style="color: green;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="p-3 rounded-3 telegram-info-card">
 
                 <div class="pc-icon">💻</div>
