@@ -141,9 +141,10 @@ async def set_telegram_turn(request: Request):
             )
             status = await AuthInfoClass.is_auth(request.ctx.user_id)
             if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
+                status = await client.connect()
                 message_type = "success"
-                message = "Бот запущен!"
-                running = True
+                message = ["Неудачный запуск бота!", "Бот запущен!"][status]
+                running = status
             else:
                 status = await AuthInfoClass.auth_send_key(request.ctx.user_id)
                 if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
