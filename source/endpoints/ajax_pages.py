@@ -127,7 +127,7 @@ async def set_telegram_turn(request: Request):
 
     if message_type == "info":
         client = AuthInfoClass.get_client(request.ctx.user_id)
-        if client.is_connected:
+        if client and client.is_connected:
             await client.disconnect()
         client = AuthInfoClass.add_client(
             user_id=request.ctx.user_id,
