@@ -4,24 +4,21 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
     const statusDot = document.querySelector('.status-dot');
     const messageBox = document.querySelector('.bot-message');
 
-    const payload = {};
-    // определяем текущее действие
-    const isRunning = btn.classList.contains('btn-stop');
     const url = '/ajax/bot/turn';
 
-    // временное состояние
+    // === UI: временное состояние ===
     btn.disabled = true;
+    const prevText = btn.innerText;
     btn.innerText = '⏳ Обработка...';
+
     messageBox.className = 'bot-message info';
     messageBox.innerText = 'Отправляем команду боту...';
-
-    payload["status"] = isRunning;
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({}) // сервер сам решает что делать
         });
 
         const data = await response.json();
@@ -31,7 +28,7 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
         }
 
         /*
-            Ожидаемый ответ сервера:
+            Сервер:
             {
                 running: true|false,
                 message: "текст",
@@ -39,25 +36,29 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
             }
         */
 
-        // === обновляем статус ===
-        statusText.innerText = data.running ? 'Работает' : 'Остановлен';
+        // === ЕДИНСТВЕННЫЙ ИСТОЧНИК ИСТИНЫ ===
+        const running = Boolean(data.running);
 
-        statusDot.classList.toggle('online', data.running);
-        statusDot.classList.toggle('offline', !data.running);
+        // статус
+        statusText.innerText = running ? 'Работает' : 'Остановлен';
+        statusDot.classList.toggle('online', running);
+        statusDot.classList.toggle('offline', !running);
 
-        // === обновляем кнопку ===
-        btn.classList.toggle('btn-start', !data.running);
-        btn.classList.toggle('btn-stop', data.running);
-        btn.innerText = data.running
+        // кнопка
+        btn.classList.toggle('btn-start', !running);
+        btn.classList.toggle('btn-stop', running);
+        btn.innerText = running
             ? '⛔ Остановить бота'
             : '▶️ Запустить бота';
 
-        // === сообщение ===
+        // сообщение
         messageBox.className = `bot-message ${data.message_type || 'info'}`;
         messageBox.innerText = data.message || 'Статус обновлён';
 
     } catch (err) {
         console.error(err);
+
+        btn.innerText = prevText;
 
         messageBox.className = 'bot-message error';
         messageBox.innerText = err.message || 'Не удалось выполнить действие';
@@ -66,6 +67,7 @@ document.getElementById('toggleBotBtn')?.addEventListener('click', async () => {
         btn.disabled = false;
     }
 });
+
 
 document.getElementById('applyBotCodeBtn').addEventListener('click', async () => {
     const codeInput = document.getElementById('botCodeInput');
