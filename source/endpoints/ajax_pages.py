@@ -129,25 +129,28 @@ async def set_telegram_turn(request: Request):
         client = AuthInfoClass.get_client(request.ctx.user_id)
         if client and client.is_connected:
             await client.disconnect()
-        client = AuthInfoClass.add_client(
-            user_id=request.ctx.user_id,
-            api_id=user.api_id,
-            api_hash=user.api_hash,
-            password_2fa=str(user.password_2fa),
-            phone=user.phone
-        )
-        status = await AuthInfoClass.is_auth(request.ctx.user_id)
-        if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
             message_type = "success"
-            message = "Бот запущен!"
-            running = True
+            message = "Бот остановлен!"
         else:
-            status = await AuthInfoClass.auth_send_key(request.ctx.user_id)
-            if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
-                message = "Введите код из Telegram!"
+            client = AuthInfoClass.add_client(
+                user_id=request.ctx.user_id,
+                api_id=user.api_id,
+                api_hash=user.api_hash,
+                password_2fa=str(user.password_2fa),
+                phone=user.phone
+            )
+            status = await AuthInfoClass.is_auth(request.ctx.user_id)
+            if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
+                message_type = "success"
+                message = "Бот запущен!"
+                running = True
             else:
-                message = "Неизвестная ошибка при получении ключа!"
-                message_type = "warning"
+                status = await AuthInfoClass.auth_send_key(request.ctx.user_id)
+                if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
+                    message = "Введите код из Telegram!"
+                else:
+                    message = "Неизвестная ошибка при получении ключа!"
+                    message_type = "warning"
 
     return json(
         {
