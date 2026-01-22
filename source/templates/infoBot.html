@@ -13,83 +13,6 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row g-4">
-        <!-- Карточка Оплата -->
-        <div class="col-md-4">
-            <div class="p-3 rounded-3 payment-card">
-
-                <div class="frog-icon">🐸</div>
-                <div class="tree-icon">🌳</div>
-
-                <h5 class="payment-card-title text-center mb-3">
-                    Оплата
-                </h5>
-
-                <div class="payment-card-date text-center">
-                    <div class="label">Активна до</div>
-                    
-                    {% set time_diff = (user.paid_until - FUNC_CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
-                    {% if time_diff < 0 %}
-                        <div class="value" style="color: #5900ff;">
-                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }} (Истекла)
-                        </div>
-                    {% elif time_diff < 93600 %} {# 93600 сек = 26 часов (1 день + 2 часа) #}
-                        <div class="value" style="color: red;">
-                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
-                        </div>
-                    {% else %}
-                        <div class="value" style="color: green;">
-                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
-                        </div>
-                    {% endif %}
-
-                </div>
-
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="p-3 rounded-3 telegram-info-card">
-
-                <div class="pc-icon">💻</div>
-                <div class="disk-icon">💿</div>
-
-                <h5 class="telegram-card-title text-center mb-3">
-                    Информация Telegram
-                </h5>
-
-                <ul class="list-unstyled mb-0 text-center telegram-info-list">
-                    <li class="mb-2">
-                        <strong>API ID:</strong><br>
-                        <span id="tg-api-id">
-                            {{ user.api_id if user.api_id else "Не задано" }}
-                        </span>
-                    </li>
-
-                    <li class="mb-2">
-                        <strong>API Hash:</strong><br>
-                        <span id="tg-api-hash">
-                            {{ user.api_hash if user.api_hash else "Не задано" }}
-                        </span>
-                    </li>
-
-                    <li class="mb-2">
-                        <strong>Телефон:</strong><br>
-                        <span id="tg-phone">
-                            {{ user.phone if user.phone else "Не задан" }}
-                        </span>
-                    </li>
-
-                    <li>
-                        <strong>2FA пароль:</strong><br>
-                        <span id="tg-2fa">
-                            {{user.password_2fa if user.password_2fa else "Не установлен" }}
-                        </span>
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
-
         <!-- Блок управления Telegram ботом -->
         <div class="col-md-4">
             <div class="telegram-bot-card p-3 rounded-3">
@@ -139,6 +62,84 @@
                     Статус...
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Карточка Telegram Info -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 telegram-info-card">
+
+                <div class="pc-icon">💻</div>
+                <div class="disk-icon">💿</div>
+
+                <h5 class="telegram-card-title text-center mb-3">
+                    Информация Telegram
+                </h5>
+
+                <ul class="list-unstyled mb-0 text-center telegram-info-list">
+                    <li class="mb-2">
+                        <strong>API ID:</strong><br>
+                        <span id="tg-api-id">
+                            {{ user.api_id if user.api_id else "Не задано" }}
+                        </span>
+                    </li>
+
+                    <li class="mb-2">
+                        <strong>API Hash:</strong><br>
+                        <span id="tg-api-hash">
+                            {{ user.api_hash if user.api_hash else "Не задано" }}
+                        </span>
+                    </li>
+
+                    <li class="mb-2">
+                        <strong>Телефон:</strong><br>
+                        <span id="tg-phone">
+                            {{ user.phone if user.phone else "Не задан" }}
+                        </span>
+                    </li>
+
+                    <li>
+                        <strong>2FA пароль:</strong><br>
+                        <span id="tg-2fa">
+                            {{user.password_2fa if user.password_2fa else "Не установлен" }}
+                        </span>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+        
+        <!-- Карточка Оплата -->
+        <div class="col-md-4">
+            <div class="p-3 rounded-3 payment-card">
+
+                <div class="frog-icon">🐸</div>
+                <div class="tree-icon">🌳</div>
+
+                <h5 class="payment-card-title text-center mb-3">
+                    Оплата
+                </h5>
+
+                <div class="payment-card-date text-center">
+                    <div class="label">Активна до</div>
+                    
+                    {% set time_diff = (user.paid_until - FUNC_CURRENT_TIME_UTC()).total_seconds() if user.paid_until else -1 %}
+                    {% if time_diff < 0 %}
+                        <div class="value" style="color: #5900ff;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }} (Истекла)
+                        </div>
+                    {% elif time_diff < 93600 %} {# 93600 сек = 26 часов (1 день + 2 часа) #}
+                        <div class="value" style="color: red;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                        </div>
+                    {% else %}
+                        <div class="value" style="color: green;">
+                            {{ user.paid_until.strftime("%H:%M:%S %d.%m.%Y") }}
+                        </div>
+                    {% endif %}
+
+                </div>
             </div>
         </div>
 
