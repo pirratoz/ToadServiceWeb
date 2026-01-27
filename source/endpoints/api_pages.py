@@ -11,13 +11,13 @@ from source.db.repositories import (
     TaskRepository,
 )
 
-ajax_page = Blueprint(
+api_page = Blueprint(
     name="Api",
     url_prefix="/api"
 )
 
 
-@ajax_page.get("/users/<user_id:int>")
+@api_page.get("/users/<user_id:int>")
 @web_api_key_required
 async def handler_get_user_info(request: Request, user_id: int):
     async with request.app.ctx.db_pool.acquire() as connection:
