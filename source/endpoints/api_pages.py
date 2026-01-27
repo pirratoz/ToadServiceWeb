@@ -33,10 +33,13 @@ async def handler_get_user_info(request: Request, user_id: int):
     })
 
 
-@api_page.get("/tasks/ready")
+@api_page.post("/tasks/ready")
 @web_api_key_required
 async def handler_get_ready_tasks(request: Request):
-    user_ids = loads(request.args.get("user_ids"))
+    data = request.json
+    user_ids = data["user_ids"]
+    if not user_ids:
+        return json({"tasks": []})
     async with request.app.ctx.db_pool.acquire() as connection:
         tasks = await TaskRepository(connection).get_ready_task_for_users(user_ids)
     return json(tasks.dump())
