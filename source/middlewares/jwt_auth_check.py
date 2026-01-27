@@ -1,14 +1,14 @@
-from os import getenv
-
+import jwt
 from sanic import (
     Request,
     redirect,
 )
-from sanic.exceptions import Unauthorized
-import jwt
+
+from source.configs import JwtConfig
 
 
 async def jwt_auth_middleware(request: Request):
+    config = JwtConfig()
     route = request.route
     if route is None:
         return
@@ -22,11 +22,11 @@ async def jwt_auth_middleware(request: Request):
         return redirect("/info/registration")
 
     try:
-        with open(file=getenv("JWT_PUBLIC_KEY_PATH"), mode="r") as fp:
+        with open(file=config.public_key_path, mode="r") as fp:
             payload = jwt.decode(
                 token,
                 fp.read(),
-                algorithms=[getenv("JWT_ALGORITHM")]
+                algorithms=[config.algorithm]
             )
     except jwt.ExpiredSignatureError:
         return redirect("/info/registration")
