@@ -39,7 +39,7 @@ class UserInfo:
         """
         safe: default = True
         """
-        if not safe:
+        if safe is None:
             safe = True
         user = self.safe_user() if safe else self
         return {
