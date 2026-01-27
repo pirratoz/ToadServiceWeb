@@ -1,6 +1,5 @@
 import hashlib
 import hmac
-from os import getenv
 from datetime import (
     datetime,
     timezone,
@@ -19,6 +18,10 @@ from source.db.repositories import (
     TaskRepository,
 )
 from source.usecases import CreateUserUseCase
+from source.configs import (
+    TgConfig,
+    JwtConfig,
+)
 
 main_page = Blueprint(
     name="MainPage"
@@ -27,6 +30,8 @@ main_page = Blueprint(
 
 @main_page.get("/auth")
 async def handler_auth_page(request: Request):
+    jwt_config = JwtConfig()
+    tg_config = TgConfig()
     if request.args.get("id", None):
         recived_data = {
             "id": request.args.get("id", None),
@@ -42,23 +47,23 @@ async def handler_auth_page(request: Request):
 
         data_string = "\n".join(f"{k}={v}" for k, v in sorted(data_copy.items())).encode("utf-8")
 
-        secret_key = hashlib.sha256(getenv("TG_TOKEN").encode("utf-8")).digest()
+        secret_key = hashlib.sha256(tg_config.token.encode("utf-8")).digest()
         hmac_calculated = hmac.new(secret_key, data_string, hashlib.sha256).hexdigest()
         if hmac.compare_digest(hmac_calculated, recived_data["hash"]):
             payload = {
                 "sub": recived_data["id"],
                 "iat": datetime.now(timezone.utc),
-                "exp": datetime.now(timezone.utc) + timedelta(minutes=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")))
+                "exp": datetime.now(timezone.utc) + timedelta(minutes=jwt_config.access_token_exp_minutes)
             }
-            with open(getenv("JWT_PRIVATE_KEY_PATH"), "r") as fp:
-                jwt_token = jwt.encode(payload, fp.read(), algorithm=getenv("JWT_ALGORITHM"))
+            with open(jwt_config.private_key_path, "r") as fp:
+                jwt_token = jwt.encode(payload, fp.read(), algorithm=jwt_config.algorithm)
             async with request.app.ctx.db_pool.acquire() as connection:
                 user = await CreateUserUseCase(
                     user_repo=UserRepository(connection),
                     task_repo=TaskRepository(connection)
                 ).execute(int(recived_data["id"]))
             response = await render(template_name="authRedirect.html", status=200)
-            response.add_cookie("access_token", jwt_token, max_age=int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES")) * 60, secure=False)
+            response.add_cookie("access_token", jwt_token, max_age=jwt_config.access_token_exp_minutes * 60, secure=False)
             return response
 
     return await render(template_name="infoRegistration.html", status=200)
