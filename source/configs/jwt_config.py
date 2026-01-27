@@ -8,5 +8,5 @@ class JwtConfig(BaseConfig):
         super().__init__()
         self.public_key_path: str = getenv("JWT_PUBLIC_KEY_PATH", "NotSetUp")
         self.private_key_path: str = getenv("JWT_PRIVATE_KEY_PATH", "NotSetUp")
-        self.access_token_exp_minutes: int = getenv("JWT_ACCESS_TOKEN_EXP_MINUTES", "NotSetUp")
+        self.access_token_exp_minutes: int = int(getenv("JWT_ACCESS_TOKEN_EXP_MINUTES", "5"))
         self.algorithm: str = getenv("JWT_ALGORITHM", "NotSetUp")
