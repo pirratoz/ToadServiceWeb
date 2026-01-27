@@ -1,3 +1,5 @@
+from json import loads
+
 from sanic import (
     Blueprint,
     Request,
@@ -29,3 +31,12 @@ async def handler_get_user_info(request: Request, user_id: int):
         "user": user.dump(False),
         "tasks": tasks.dump()
     })
+
+
+@api_page.get("/tasks/ready")
+@web_api_key_required
+async def handler_get_ready_tasks(request: Request):
+    user_ids = loads(request.args.get("user_ids"))
+    async with request.app.ctx.db_pool.acquire() as connection:
+        tasks = await TaskRepository(connection).get_ready_task_for_users(user_ids)
+    return json(tasks.dump())

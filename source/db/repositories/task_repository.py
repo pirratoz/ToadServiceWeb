@@ -99,3 +99,16 @@ class TaskRepository(BaseRepository):
             task.value
         )
         return TaskInfo.load_from_record(record)
+
+    async def get_ready_task_for_users(self, user_ids: list[int]) -> TaskInfoList:
+        query = """
+            SELECT *
+            FROM tasks
+            WHERE turn IS TRUE
+            AND next_run > NOW() + INTERVAL '10 seconds'
+            AND user_id = ANY($1::BIGINT[])
+            ORDER BY user_id ASC;
+        """
+
+        records = await self.connection.fetch(query, user_ids)
+        return TaskInfoList.load_from_records(records)
