@@ -1,4 +1,4 @@
-from json import loads
+from datetime import datetime
 
 from sanic import (
     Blueprint,
@@ -6,6 +6,7 @@ from sanic import (
     json,
 )
 
+from source.db.enums import TaskTypeEnum
 from source.decorators import web_api_key_required
 from source.usecases import GetProfileUserUseCase
 from source.db.repositories import (
@@ -43,3 +44,17 @@ async def handler_get_ready_tasks(request: Request):
     async with request.app.ctx.db_pool.acquire() as connection:
         tasks = await TaskRepository(connection).get_ready_task_for_users(user_ids)
     return json(tasks.dump())
+
+
+@api_page.post("/set/next_run")
+@web_api_key_required
+async def handler_set_next_run(request: Request):
+    data = request.json
+    async with request.app.ctx.db_pool.acquire() as connection:
+        info = await TaskRepository(connection).update_next_run_for_task(
+            user_id = request.ctx.user_id,
+            task=TaskTypeEnum(data.get("type")),
+            next_run=datetime.fromisoformat(data.get("next_run"))
+        )
+
+    return json({"info": info.dump()})
