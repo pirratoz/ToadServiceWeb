@@ -63,3 +63,22 @@ async def handler_set_next_run(request: Request):
         )
 
     return json({"info": info.dump()})
+
+
+@api_page.post("/set/info/chat")
+@web_api_key_required
+async def handler_set_info_chat(request: Request):
+    # data = {
+    #   "user_id": int,
+    #   "chat_id": int,
+    #   "chat_title": str
+    # }
+    data = request.json
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user_id = int(data.get("user_id"))
+        chat_id = int(data.get("chat_id"))
+        chat_title = data.get("chat_title")
+        info = await UserRepository(connection).update_chat_id(user_id, chat_id)
+        info = await UserRepository(connection).update_chat_title(user_id, chat_title)
+
+    return json({"info": info.dump()})
