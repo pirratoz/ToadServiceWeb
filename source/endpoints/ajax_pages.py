@@ -208,7 +208,7 @@ async def set_telegram_turn(request: Request):
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
     try:
-        if client.is_connected and client.is_initialized:
+        if client.is_connected or client.is_initialized:
             await client.stop()
         elif not await storage.AuthInfoClass.start_client(request.ctx.user_id):
             response.set_running(not response.running)
@@ -262,7 +262,7 @@ async def set_telegram_code(request: Request):
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
 
     try:
-        if client.is_connected and client.is_initialized:
+        if client.is_connected or client.is_initialized:
             await client.stop()
         elif not await storage.AuthInfoClass.start_client(request.ctx.user_id):
             response.set_running(not response.running)
