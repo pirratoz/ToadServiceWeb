@@ -209,6 +209,9 @@ async def set_telegram_turn(request: Request):
 
     try:
         await client.start()
+        storage.AuthInfoClass.client_running[user_id] = True
+        response.set_type_and_message(MessageType.SUCCESS, "Бот запущен!")
+        response.set_running(True)
     except errors.Unauthorized as error:
         storage.AuthInfoClass.remove_files(user_id)
         client = get_client()
@@ -253,7 +256,8 @@ async def set_telegram_code(request: Request):
     status = await storage.AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
 
     if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
-        response = TelegramServerResponse(False, "Авторизация пройдена!\nНажмите запустить бота!", MessageType.SUCCESS)
+        response.set_running(False)
+        response.set_type_and_message(MessageType.SUCCESS, "Авторизация пройдена!\nНажмите запустить бота!")
     elif status == AuthInfoEnum.CLIENT_PHONE_CODE_EXPIRED:
         response.set_type_and_message(MessageType.WARNING, "Код просрочен, перезапустите бота!")
     elif status == AuthInfoEnum.CLIENT_PASSWORD_INVALID:
