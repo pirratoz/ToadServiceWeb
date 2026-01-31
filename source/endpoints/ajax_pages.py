@@ -269,3 +269,17 @@ async def set_telegram_code(request: Request):
     response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
 
     return json(response.dump())
+
+
+@ajax_page.post("/code/input")
+@jwt_auth_required
+async def set_next_run(request: Request):
+    data = request.json
+    async with request.app.ctx.db_pool.acquire() as connection:
+        info = await TaskRepository(connection).update_next_run_for_task(
+            user_id = request.ctx.user_id,
+            task=TaskTypeEnum(data.get("type")),
+            next_run=datetime.fromisoformat(data.get("next_run"))
+        )
+
+    return json({"info": info.dump()})

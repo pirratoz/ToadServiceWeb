@@ -63,3 +63,10 @@ async def handler_bot_page(request: Request):
     return await render(
         "infoBot.html", status=200, context={"user": user, "bot_is_running": bot_is_running}
     )
+
+@info_pages.get("/code")
+@jwt_auth_required
+async def handler_code_page(request: Request):
+    return await render(
+        "infoCode.html", status=200
+    )

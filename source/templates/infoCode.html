@@ -1,0 +1,41 @@
+{% extends "web.html" %}
+{% block title %}Активация кода{% endblock %}
+
+{% block html_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/code_activation.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="activation-wrapper">
+    <div class="activation-card">
+
+        <h2 class="title">🔐 Активация кода</h2>
+        <p class="subtitle">
+            Введите код активации для запуска Telegram-бота
+        </p>
+
+        <input
+            type="text"
+            id="activationCode"
+            maxlength="16"
+            placeholder="Введите 16-символьный код"
+            class="code-input"
+        >
+
+        <button id="activateBtn" class="activate-btn">
+            ▶ Активировать
+        </button>
+
+        <div id="resultBox" class="result-box info">
+            Ожидание ввода кода
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_js %}
+    <script src="{{ url_for('static', filename='js/code_activation.js') }}"></script>
+{% endblock %}

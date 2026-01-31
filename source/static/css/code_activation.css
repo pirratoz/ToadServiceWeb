@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e6f2ff, #f5f9ff);
+}
+
+.activation-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activation-card {
+    width: 420px;
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.title {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* input */
+
+.code-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #cfe3ff;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.code-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* button */
+
+.activate-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.activate-btn:hover {
+    background: #2563eb;
+}
+
+.activate-btn:disabled {
+    background: #9aa8c7;
+    cursor: not-allowed;
+}
+
+/* result */
+
+.result-box {
+    margin-top: 16px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.result-box.info {
+    background: #eef5ff;
+    color: #2c4a8a;
+}
+
+.result-box.success {
+    background: #e6f9ed;
+    color: #1d7a3e;
+}
+
+.result-box.error {
+    background: #ffeaea;
+    color: #b91c1c;
+}
+
+.result-box.warning {
+    background: #fff4e5;
+    color: #9a5a00;
+}
