@@ -34,7 +34,7 @@ class PromocodesRepository(BaseRepository):
         try:
             async with self.connection.transaction():
                 # 1. Проверяем существование
-                check_query = "SELECT id, count_activation, interval FROM promocodes WHERE code = $1"
+                check_query = "SELECT id, count_activation, duration FROM promocodes WHERE code = $1"
                 promo = await self.connection.fetchrow(check_query, code)
 
                 if not promo:
@@ -80,6 +80,5 @@ class PromocodesRepository(BaseRepository):
             response["message"] = "Вы уже активировали этот промокод ранее"
             return response
         except Exception as e:
-            print(e)
             return response
         
