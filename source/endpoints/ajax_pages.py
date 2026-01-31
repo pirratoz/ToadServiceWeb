@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from enum import Enum
 import asyncio
 
+from pyrogram import errors
+
 from sanic import (
     Blueprint,
     Request,
@@ -193,18 +195,22 @@ async def set_telegram_turn(request: Request):
         response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
         return json(response.dump())
 
-    client = storage.AuthInfoClass.add_client(
-        user_id=request.ctx.user_id,
-        api_id=user.api_id,
-        api_hash=user.api_hash,
-        password_2fa=str(user.password_2fa),
-        phone=user.phone
-    )
-    status = await storage.AuthInfoClass.is_auth(request.ctx.user_id)
-    if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
-        status = await client.connect()
-        response = TelegramServerResponse(status, ["Неудачный запуск бота!", "Бот запущен!"][status], MessageType.SUCCESS)
-    else:
+    def get_client():
+        return storage.AuthInfoClass.add_client(
+            user_id=request.ctx.user_id,
+            api_id=user.api_id,
+            api_hash=user.api_hash,
+            password_2fa=str(user.password_2fa),
+            phone=user.phone
+        )
+    
+    client = get_client()
+
+    try:
+        await client.start()
+    except errors.Unauthorized as error:
+        storage.AuthInfoClass.remove_files()
+        client = get_client(request.ctx.user_id)
         status = await storage.AuthInfoClass.auth_send_key(request.ctx.user_id)
         if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
             response.set_message("Введите код из Telegram!")
@@ -246,16 +252,14 @@ async def set_telegram_code(request: Request):
     status = await storage.AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
 
     if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
-        response = TelegramServerResponse(True, "Бот запущен!", MessageType.SUCCESS)
-        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
+        response = TelegramServerResponse(False, "Авторизация пройдена!\nНажмите запустить бота!", MessageType.SUCCESS)
     elif status == AuthInfoEnum.CLIENT_PHONE_CODE_EXPIRED:
         response.set_type_and_message(MessageType.WARNING, "Код просрочен, перезапустите бота!")
-        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
     elif status == AuthInfoEnum.CLIENT_PASSWORD_INVALID:
         response.set_type_and_message(MessageType.WARNING, "2fa пароль - неверный")
-        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
     else:
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
-        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
+
+    response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
 
     return json(response.dump())

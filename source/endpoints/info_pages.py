@@ -11,7 +11,7 @@ from source.db.repositories import (
     TaskRepository,
 )
 
-from toad_bot.storage import AuthInfoClass
+import toad_bot.storage.auth_info as storage
 
 
 info_pages = Blueprint(
@@ -58,14 +58,7 @@ async def handler_bot_page(request: Request):
         ).execute(request.ctx.user_id)
         user = user.safe_user()
     
-    client = AuthInfoClass.get_client(request.ctx.user_id)
-
-    bot_is_running = False
-    try:
-        if client.is_connected:
-            bot_is_running = True
-    except:
-        pass
+    bot_is_running = storage.AuthInfoClass.get_status_client(request.ctx.user_id)
 
     return await render(
         "infoBot.html", status=200, context={"user": user, "bot_is_running": bot_is_running}
