@@ -211,7 +211,7 @@ async def set_telegram_turn(request: Request):
         await client.start()
     except errors.Unauthorized as error:
         storage.AuthInfoClass.remove_files(user_id)
-        client = get_client(user_id)
+        client = get_client()
         status = await storage.AuthInfoClass.auth_send_key(user_id)
         if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
             response.set_message("Введите код из Telegram!")
