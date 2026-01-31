@@ -33,6 +33,11 @@ GRANT ALL PRIVILEGES ON TABLES TO user_example_THIS;
 
 ```
 
+5. Run migrations
+```
+.venv/bin/python3.10 -m source.db.migration
+```
+
 ## JWT Auth
 1. Generating a private key
 ```

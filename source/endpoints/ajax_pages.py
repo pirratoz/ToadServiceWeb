@@ -19,6 +19,7 @@ from source.decorators import jwt_auth_required
 from source.db.repositories import (
     UserRepository,
     TaskRepository,
+    PromocodesRepository,
 )
 import toad_bot.storage as storage
 from toad_bot.enums import AuthInfoEnum
@@ -273,13 +274,13 @@ async def set_telegram_code(request: Request):
 
 @ajax_page.post("/code/input")
 @jwt_auth_required
-async def set_next_run(request: Request):
+async def input_code_user(request: Request):
     data = request.json
+    code = data.get("code", "").strip()
     async with request.app.ctx.db_pool.acquire() as connection:
-        info = await TaskRepository(connection).update_next_run_for_task(
-            user_id = request.ctx.user_id,
-            task=TaskTypeEnum(data.get("type")),
-            next_run=datetime.fromisoformat(data.get("next_run"))
+        info = await PromocodesRepository(connection).use_promocode(
+            user_id=request.ctx.user_id,
+            code=code
         )
 
-    return json({"info": info.dump()})
+    return json(info)
