@@ -1,4 +1,7 @@
 from datetime import datetime
+from dataclasses import dataclass
+from enum import Enum
+
 from sanic import (
     Blueprint,
     Request,
@@ -14,7 +17,7 @@ from source.db.repositories import (
     UserRepository,
     TaskRepository,
 )
-from toad_bot.storage import AuthInfoClass
+import toad_bot.storage as storage
 from toad_bot.enums import AuthInfoEnum
 
 
@@ -22,6 +25,51 @@ ajax_page = Blueprint(
     name="Ajax",
     url_prefix="/ajax"
 )
+
+
+class MessageType(Enum):
+    INFO = "info"
+    WARNING = "warning"
+    SUCCESS = "success"
+    ERROR = "error"
+
+
+@dataclass
+class TelegramServerResponse:
+    running: bool
+    message: str
+    message_type: MessageType
+
+    def dump(self) -> dict:
+        return {
+            "running": self.running,
+            "message": self.message,
+            "message_type": self.message_type.value
+        }
+
+    def set_running(self, value: bool) -> None:
+        self.running = value
+    
+    def set_message(self, value: str) -> None:
+        self.message = value
+    
+    def add_message(self, value: str) -> None:
+        self.message += f"\n{value}"
+    
+    def set_message_type(self, value: MessageType) -> None:
+        self.message_type = value
+    
+    def set_type_and_message(self, _type: MessageType, message: str) -> None:
+        self.message_type = _type
+        self.message = message
+
+    @staticmethod
+    def get_default() -> "TelegramServerResponse":
+        return TelegramServerResponse(
+            running=False,
+            message="Default Message Response",
+            message_type=MessageType.INFO
+        )
 
 
 @ajax_page.post("/set/turn")
@@ -38,12 +86,15 @@ async def handler_set_turn(request: Request):
     field = data.get("field")
     value = data.get("value")
     async with request.app.ctx.db_pool.acquire() as connection:
+        user_id: int = request.ctx.user_id
+        user_repo = UserRepository(connection)
+        task_repo = TaskRepository(connection)
         if field == "is_vip":
-            info = await UserRepository(connection).update_vip_status(request.ctx.user_id, value)
+            info = await user_repo.update_vip_status(user_id, value)
         elif field == "is_calculate":
-            info = await UserRepository(connection).update_calculate_status(request.ctx.user_id, value)
+            info = await user_repo.update_calculate_status(user_id, value)
         else:
-            info = await TaskRepository(connection).update_turn_for_task(request.ctx.user_id, TaskTypeEnum(field), value)
+            info = await task_repo.update_turn_for_task(user_id, TaskTypeEnum(field), value)
     return json({"info": info.dump()})
 
 
@@ -58,6 +109,7 @@ async def set_work_type(request: Request):
         info = await TaskRepository(connection).update_work_type(user_id, work_type)
 
     return json({"info": info.dump()})
+
 
 @ajax_page.post("/set/next_run")
 @jwt_auth_required
@@ -92,30 +144,11 @@ async def set_telegram_info(request: Request):
 
     return json({"info": info.dump()})
 
+
 @ajax_page.post("/bot/turn")
 @jwt_auth_required
 async def set_telegram_turn(request: Request):
     data = request.json
-
-    running = False
-    message = ""
-    message_type = "info"
-
-    async with request.app.ctx.db_pool.acquire() as connection:
-        user_repo = UserRepository(connection)
-        user = await user_repo.get_user_by_id(request.ctx.user_id)
-
-        if not user.api_id:
-            message_type = "warning"
-            message += "Установите - API ID\n"
-        
-        if not user.api_hash:
-            message_type = "warning"
-            message += "Установите - API HASH\n"
-
-        if not user.phone:
-            message_type = "warning"
-            message += "Установите - PHONE\n"
 
     """
     {
@@ -125,91 +158,98 @@ async def set_telegram_turn(request: Request):
     }
     """
 
-    if message_type == "info":
-        client = AuthInfoClass.get_client(request.ctx.user_id)
-        if client and client.is_connected:
-            await client.disconnect()
-            message_type = "success"
-            message = "Бот остановлен!"
-        else:
-            client = AuthInfoClass.add_client(
-                user_id=request.ctx.user_id,
-                api_id=user.api_id,
-                api_hash=user.api_hash,
-                password_2fa=str(user.password_2fa),
-                phone=user.phone
-            )
-            status = await AuthInfoClass.is_auth(request.ctx.user_id)
-            if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
-                status = await client.connect()
-                message_type = "success"
-                message = ["Неудачный запуск бота!", "Бот запущен!"][status]
-                running = status
-            else:
-                status = await AuthInfoClass.auth_send_key(request.ctx.user_id)
-                if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
-                    message = "Введите код из Telegram!"
-                else:
-                    message = "Неизвестная ошибка при получении ключа!"
-                    message_type = "warning"
+    response = TelegramServerResponse.get_default()
 
-    return json(
-        {
-            "running": running,
-            "message": message,
-            "message_type": message_type
-        }
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user_repo = UserRepository(connection)
+        user = await user_repo.get_user_by_id(request.ctx.user_id)
+
+        if not user.api_id:
+            response.add_message("Установите - API ID")
+        
+        if not user.api_hash:
+            response.add_message("Установите - API HASH")
+
+        if not user.phone:
+            response.add_message("Установите - PHONE")
+
+        if user.is_banned:
+            response.add_message("BAN")
+        
+        if any([not user.api_id, not user.api_hash, not user.phone, user.is_banned]):
+            response.set_message_type(MessageType.WARNING)
+
+    if response.message_type != MessageType.INFO:
+        return json(response.dump())
+    
+    client = storage.AuthInfoClass.get_client(request.ctx.user_id)
+    if client and client.is_connected:
+        await client.disconnect()
+        response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
+        return json(response.dump())
+
+    client = storage.AuthInfoClass.add_client(
+        user_id=request.ctx.user_id,
+        api_id=user.api_id,
+        api_hash=user.api_hash,
+        password_2fa=str(user.password_2fa),
+        phone=user.phone
     )
+    status = await storage.AuthInfoClass.is_auth(request.ctx.user_id)
+    if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
+        status = await client.connect()
+        response = TelegramServerResponse(status, ["Неудачный запуск бота!", "Бот запущен!"][status], MessageType.SUCCESS)
+    else:
+        status = await storage.AuthInfoClass.auth_send_key(request.ctx.user_id)
+        if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
+            response.set_message("Введите код из Telegram!")
+        else:
+            response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
+
+    if response.running:
+        await client.initialize()
+
+    return json(response.dump())
 
 @ajax_page.post("/bot/code")
 @jwt_auth_required
 async def set_telegram_code(request: Request):
     data = request.json
 
-    running = False
-    message = ""
-    message_type = "info"
+    response = TelegramServerResponse.get_default()
 
-    server_data = {
-        "running": running,
-        "message": message,
-        "message_type": message_type
-    }
-
-    client = AuthInfoClass.get_client(request.ctx.user_id)
+    client = storage.AuthInfoClass.get_client(request.ctx.user_id)
 
     if not client:
-        message += "Вы не запустили бота\n"
-        message_type = "warning"
-        return json(server_data)
+        response.set_type_and_message(MessageType.WARNING, "Вы не запустили бота!")
+        return json(response.dump())
     
-    hash_code = AuthInfoClass.get_hash_code(request.ctx.user_id)
+    async with request.app.ctx.db_pool.acquire() as connection:
+        user_repo = UserRepository(connection)
+        user = await user_repo.get_user_by_id(request.ctx.user_id)
+
+        if user.is_banned:
+            response.set_type_and_message(MessageType.WARNING, "BAN")
+            return json(response.dump())
+
+    hash_code = storage.AuthInfoClass.get_hash_code(request.ctx.user_id)
     
     if not hash_code:
-        message += "Хэш не найден, попробуйте запустить бота снова!"
-        message_type = "warning"
-        return json(server_data)
+        response.set_type_and_message(MessageType.WARNING, "Хэш не найден, попробуйте запустить бота снова!")
+        return json(response.dump())
     
-    status = await AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
+    status = await storage.AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
 
     if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
-        message = "Бот запущен!"
-        message_type = "success"
-        running = True
+        response = TelegramServerResponse(True, "Бот запущен!", MessageType.SUCCESS)
     elif status == AuthInfoEnum.CLIENT_PHONE_CODE_EXPIRED:
-        message = "Код просрочен, перезапустите бота!"
-        message_type = "warning"
+        response.set_type_and_message(MessageType.WARNING, "Код просрочен, перезапустите бота!")
     elif status == AuthInfoEnum.CLIENT_PASSWORD_INVALID:
-        message = "2fa пароль - неверный"
-        message_type = "warning"
+        response.set_type_and_message(MessageType.WARNING, "2fa пароль - неверный")
     else:
-        message = "Произошла ошибка, попробуйте ещё раз или сообщите админу"
-        message_type = "warning"
+        response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
 
-    return json(
-        {
-            "running": running,
-            "message": message,
-            "message_type": message_type
-        }
-    )
+    if response.running:
+        await client.initialize()
+    
+    return json(response.dump())

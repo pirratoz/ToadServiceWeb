@@ -102,12 +102,15 @@ class TaskRepository(BaseRepository):
 
     async def get_ready_task_for_users(self, user_ids: list[int]) -> TaskInfoList:
         query = """
-            SELECT *
-            FROM tasks
-            WHERE turn IS TRUE
-            AND next_run > NOW() + INTERVAL '10 seconds'
-            AND user_id = ANY($1::BIGINT[])
-            ORDER BY user_id ASC;
+            SELECT t.*
+            FROM tasks t
+            JOIN users u ON t.user_id = u.id
+            WHERE t.turn IS TRUE
+            AND t.next_run > (NOW() AT TIME ZONE 'utc') + INTERVAL '10 seconds'
+            AND t.user_id = ANY($1::BIGINT[])
+            AND u.is_banned IS FALSE
+            AND u.paid_until > (NOW() AT TIME ZONE 'utc')
+            ORDER BY t.user_id ASC;
         """
 
         records = await self.connection.fetch(query, user_ids)

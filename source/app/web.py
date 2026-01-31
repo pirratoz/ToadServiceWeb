@@ -16,6 +16,7 @@ from source.middlewares import (
     jwt_auth_middleware,
 )
 from source.utils import MAPPER_WORK_TOAD
+import toad_bot.storage as storage
 
 
 async def setup_db_pool(app: Sanic):
@@ -54,5 +55,7 @@ def get_app() -> Sanic:
             "FUNC_CURRENT_TIME_UTC": lambda : datetime.now(timezone.utc),
         }
     )
+
+    app.add_task(storage.AuthInfoClass.pooling_server())
 
     return app
