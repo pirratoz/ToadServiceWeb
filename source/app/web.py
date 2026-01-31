@@ -1,3 +1,4 @@
+from os import getenv
 from sanic import Sanic
 import asyncpg
 from datetime import (
@@ -53,6 +54,7 @@ def get_app() -> Sanic:
         {
             "MAPPER_WORK_TOAD": MAPPER_WORK_TOAD,
             "FUNC_CURRENT_TIME_UTC": lambda : datetime.now(timezone.utc),
+            "INN": getenv("INN")
         }
     )
 

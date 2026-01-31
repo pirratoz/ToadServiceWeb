@@ -1,0 +1,174 @@
+.promo-buy-wrapper {
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 28px;
+    color: #e5e7eb;
+}
+
+.page-title {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.page-subtitle {
+    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 24px;
+}
+
+/* Информация о товаре */
+.product-info-card {
+    background: #020617;
+    border: 1px solid #1e3a8a;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+}
+
+.product-info-card h6 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+.price-table th,
+.price-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #1e293b;
+}
+
+.price-table th {
+    color: #93c5fd;
+    font-weight: 500;
+}
+
+.price-table .highlight {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Тарифы */
+.plans-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.plan-card {
+    background: #020617;
+    border: 1px solid #1e3a8a;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    position: relative;
+}
+
+.plan-card.recommended {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.4);
+}
+
+.plan-card .badge {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: #3b82f6;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.plan-days {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.plan-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #93c5fd;
+    margin-bottom: 12px;
+}
+
+/* ИНН */
+.inn-block {
+    background: #020617;
+    border: 1px dashed #334155;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.inn-block label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.inn-block input {
+    background: #020617;
+    border: 1px solid #334155;
+    color: #e5e7eb;
+}
+
+.inn-hint {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+/* Информация о продавце */
+.seller-info-card {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.seller-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #93c5fd;
+}
+
+.seller-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px dashed #1e293b;
+}
+
+.seller-row:last-child {
+    border-bottom: none;
+}
+
+.seller-label {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.seller-value {
+    font-weight: 500;
+    text-align: right;
+}
+
+.inn-value {
+    font-family: monospace;
+    letter-spacing: 1px;
+    color: #e5e7eb;
+}
+
+.seller-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6b7280;
+}

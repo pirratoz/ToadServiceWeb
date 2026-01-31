@@ -70,3 +70,11 @@ async def handler_code_page(request: Request):
     return await render(
         "infoCode.html", status=200
     )
+
+
+@info_pages.get("/payment")
+@jwt_auth_required
+async def handler_payment_page(request: Request):
+    return await render(
+        "infoPayment.html", status=200
+    )
