@@ -1,6 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
+import asyncio
 
 from sanic import (
     Blueprint,
@@ -206,8 +207,13 @@ async def set_telegram_turn(request: Request):
         else:
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
-    if response.running:
-        await client.initialize()
+    try:
+        if response.running:
+            asyncio.create_task(client.start())
+        else:
+            asyncio.create_task(client.stop())
+    except:
+        ...
 
     return json(response.dump())
 
@@ -249,7 +255,12 @@ async def set_telegram_code(request: Request):
     else:
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
 
-    if response.running:
-        await client.initialize()
+    try:
+        if response.running:
+            asyncio.create_task(client.start())
+        else:
+            asyncio.create_task(client.stop())
+    except:
+        ...
     
     return json(response.dump())
