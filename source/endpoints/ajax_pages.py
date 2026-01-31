@@ -208,14 +208,11 @@ async def set_telegram_turn(request: Request):
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
     try:
-        if client.is_connected or client.is_initialized:
-            await client.stop()
-        elif not await storage.AuthInfoClass.start_client(request.ctx.user_id):
+        if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
             response.set_running(not response.running)
             response.add_message("Попробуйте вход через код снова!")
             response.set_message_type(MessageType.WARNING)
     except Exception as error:
-        del storage.AuthInfoClass.clients[request.ctx.user_id]
         response.add_message("Что-то пошло не так...")
         response.add_message(error)
         response.add_message("1. Перезагрузите страницу")
@@ -271,7 +268,6 @@ async def set_telegram_code(request: Request):
     except Exception as error:
         del storage.AuthInfoClass.clients[request.ctx.user_id]
         response.add_message("Что-то пошло не так...")
-        response.add_message(error)
         response.add_message("1. Перезагрузите страницу")
         response.add_message("2. Попробуйте снова!")
     
