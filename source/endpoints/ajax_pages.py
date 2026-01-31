@@ -209,9 +209,12 @@ async def set_telegram_turn(request: Request):
 
     try:
         if response.running:
+            if client.is_connected:
+                await client.disconnect()
             asyncio.create_task(client.start())
         else:
-            asyncio.create_task(client.stop())
+            if client.is_connected:
+                asyncio.create_task(client.stop())
     except:
         ...
 
@@ -257,9 +260,12 @@ async def set_telegram_code(request: Request):
 
     try:
         if response.running:
+            if client.is_connected:
+                await client.disconnect()
             asyncio.create_task(client.start())
         else:
-            asyncio.create_task(client.stop())
+            if client.is_connected:
+                asyncio.create_task(client.stop())
     except:
         ...
     
