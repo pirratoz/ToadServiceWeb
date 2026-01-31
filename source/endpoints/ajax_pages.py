@@ -208,15 +208,9 @@ async def set_telegram_turn(request: Request):
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
     try:
-        if response.running:
-            if client.is_connected:
-                await client.disconnect()
-            asyncio.create_task(client.start())
-        else:
-            if client.is_connected:
-                asyncio.create_task(client.stop())
+        await storage.AuthInfoClass.start_client(request.ctx.user_id)
     except:
-        ...
+        response.add_message("Что-то пошло не так, попробуйте авторизоваться через телеграм снова!")
 
     return json(response.dump())
 
@@ -259,14 +253,8 @@ async def set_telegram_code(request: Request):
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
 
     try:
-        if response.running:
-            if client.is_connected:
-                await client.disconnect()
-            asyncio.create_task(client.start())
-        else:
-            if client.is_connected:
-                asyncio.create_task(client.stop())
+        await storage.AuthInfoClass.start_client(request.ctx.user_id)
     except:
-        ...
+        response.add_message("Что-то пошло не так, попробуйте авторизоваться через телеграм снова!")
     
     return json(response.dump())
