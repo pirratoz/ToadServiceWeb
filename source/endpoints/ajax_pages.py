@@ -151,6 +151,7 @@ async def set_telegram_info(request: Request):
 @ajax_page.post("/bot/turn")
 @jwt_auth_required
 async def set_telegram_turn(request: Request):
+    user_id = request.ctx.user_id
     data = request.json
 
     """
@@ -165,7 +166,7 @@ async def set_telegram_turn(request: Request):
 
     async with request.app.ctx.db_pool.acquire() as connection:
         user_repo = UserRepository(connection)
-        user = await user_repo.get_user_by_id(request.ctx.user_id)
+        user = await user_repo.get_user_by_id(user_id)
 
         if not user.api_id:
             response.add_message("Установите - API ID")
@@ -182,22 +183,22 @@ async def set_telegram_turn(request: Request):
         if any([not user.api_id, not user.api_hash, not user.phone, user.is_banned]):
             response.set_message_type(MessageType.WARNING)
     
-    response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
+    response.set_running(storage.AuthInfoClass.get_status_client(user_id))
 
     if response.message_type != MessageType.INFO:
         return json(response.dump())
     
-    client = storage.AuthInfoClass.get_client(request.ctx.user_id)
-    if storage.AuthInfoClass.get_status_client(request.ctx.user_id):
-        storage.AuthInfoClass.client_running[request.ctx.user_id] = False
+    client = storage.AuthInfoClass.get_client(user_id)
+    if storage.AuthInfoClass.get_status_client(user_id):
+        storage.AuthInfoClass.client_running[user_id] = False
         await client.disconnect()
         response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
-        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
+        response.set_running(storage.AuthInfoClass.get_status_client(user_id))
         return json(response.dump())
 
     def get_client():
         return storage.AuthInfoClass.add_client(
-            user_id=request.ctx.user_id,
+            user_id=user_id,
             api_id=user.api_id,
             api_hash=user.api_hash,
             password_2fa=str(user.password_2fa),
@@ -209,9 +210,9 @@ async def set_telegram_turn(request: Request):
     try:
         await client.start()
     except errors.Unauthorized as error:
-        storage.AuthInfoClass.remove_files()
-        client = get_client(request.ctx.user_id)
-        status = await storage.AuthInfoClass.auth_send_key(request.ctx.user_id)
+        storage.AuthInfoClass.remove_files(user_id)
+        client = get_client(user_id)
+        status = await storage.AuthInfoClass.auth_send_key(user_id)
         if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
             response.set_message("Введите код из Telegram!")
         else:
