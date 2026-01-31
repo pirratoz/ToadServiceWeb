@@ -184,7 +184,8 @@ async def set_telegram_turn(request: Request):
         return json(response.dump())
     
     client = storage.AuthInfoClass.get_client(request.ctx.user_id)
-    if client and client.is_connected:
+    if storage.AuthInfoClass.get_status_client(request.ctx.user_id):
+        storage.AuthInfoClass.client_running[request.ctx.user_id] = False
         await client.disconnect()
         response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
         return json(response.dump())
@@ -208,10 +209,12 @@ async def set_telegram_turn(request: Request):
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
     try:
-        if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
-            response.set_running(not response.running)
-            response.add_message("Попробуйте вход через код снова!")
-            response.set_message_type(MessageType.WARNING)
+        if response.running and not storage.AuthInfoClass.get_status_client(request.ctx.user_id):
+            storage.AuthInfoClass.client_running[request.ctx.user_id] = True
+            if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
+                response.set_running(not response.running)
+                response.add_message("Попробуйте вход через код снова!")
+                response.set_message_type(MessageType.WARNING)
     except Exception as error:
         response.add_message("Что-то пошло не так...")
         response.add_message(error)
