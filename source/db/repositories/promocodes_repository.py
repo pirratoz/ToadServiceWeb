@@ -63,7 +63,7 @@ class PromocodesRepository(BaseRepository):
                     WHERE id = $2
                     RETURNING paid_until;
                 """
-                new_paid_until = await self.connection.fetchval(user_query, promo['interval'], user_id)
+                new_paid_until = await self.connection.fetchval(user_query, promo['duration'], user_id)
 
                 # 3. Записываем в историю
                 history_query = "INSERT INTO history_promocodes (user_id, promocode_id) VALUES ($1, $2);"
@@ -71,7 +71,7 @@ class PromocodesRepository(BaseRepository):
 
                 response.update({
                     "success": True,
-                    "message": f"Промокод успешно активирован!\nДобавлено: {promo['interval']}",
+                    "message": f"Промокод успешно активирован!\nДобавлено: {promo['duration']}",
                     "message_type": "success"
                 })
                 return response
@@ -80,6 +80,5 @@ class PromocodesRepository(BaseRepository):
             response["message"] = "Вы уже активировали этот промокод ранее"
             return response
         except Exception as e:
-            print(e)
             return response
         
