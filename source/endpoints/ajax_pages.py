@@ -191,7 +191,7 @@ async def set_telegram_turn(request: Request):
     client = storage.AuthInfoClass.get_client(user_id)
     if storage.AuthInfoClass.get_status_client(user_id):
         storage.AuthInfoClass.client_running[user_id] = False
-        await client.disconnect()
+        await client.stop(block=True)
         response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
         response.set_running(storage.AuthInfoClass.get_status_client(user_id))
         return json(response.dump())
@@ -213,11 +213,12 @@ async def set_telegram_turn(request: Request):
         response.set_type_and_message(MessageType.SUCCESS, "Бот запущен!")
         response.set_running(True)
     except errors.Unauthorized as error:
+        response.add_message(error)
         storage.AuthInfoClass.remove_files(user_id)
         client = get_client()
         status = await storage.AuthInfoClass.auth_send_key(user_id)
         if status == AuthInfoEnum.CLIENT_AUTH_SEND_CODE:
-            response.set_message("Введите код из Telegram!")
+            response.add_message("Введите код из Telegram!")
         else:
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
