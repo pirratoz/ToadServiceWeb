@@ -7,7 +7,7 @@ import typing
 import dotenv
 from asyncpg import Connection
 
-from connect import get_connection
+from source.db.connect import get_connection
 
 MIGRATIONS_PATH = "source/db/migrations"
 MIGRATIONS_JSON_PATH = "source/db/migrations/migrations.json"
