@@ -80,5 +80,6 @@ class PromocodesRepository(BaseRepository):
             response["message"] = "Вы уже активировали этот промокод ранее"
             return response
         except Exception as e:
+            print(e)
             return response
         
