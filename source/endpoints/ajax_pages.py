@@ -179,6 +179,8 @@ async def set_telegram_turn(request: Request):
         
         if any([not user.api_id, not user.api_hash, not user.phone, user.is_banned]):
             response.set_message_type(MessageType.WARNING)
+    
+    response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
 
     if response.message_type != MessageType.INFO:
         return json(response.dump())
@@ -188,6 +190,7 @@ async def set_telegram_turn(request: Request):
         storage.AuthInfoClass.client_running[request.ctx.user_id] = False
         await client.disconnect()
         response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
         return json(response.dump())
 
     client = storage.AuthInfoClass.add_client(
@@ -208,19 +211,6 @@ async def set_telegram_turn(request: Request):
         else:
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
-    try:
-        if response.running and not storage.AuthInfoClass.get_status_client(request.ctx.user_id):
-            storage.AuthInfoClass.client_running[request.ctx.user_id] = True
-            if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
-                response.set_running(not response.running)
-                response.add_message("Попробуйте вход через код снова!")
-                response.set_message_type(MessageType.WARNING)
-    except Exception as error:
-        response.add_message("Что-то пошло не так...")
-        response.add_message(error)
-        response.add_message("1. Перезагрузите страницу")
-        response.add_message("2. Попробуйте снова!")
-
     return json(response.dump())
 
 @ajax_page.post("/bot/code")
@@ -234,6 +224,7 @@ async def set_telegram_code(request: Request):
 
     if not client:
         response.set_type_and_message(MessageType.WARNING, "Вы не запустили бота!")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
         return json(response.dump())
     
     async with request.app.ctx.db_pool.acquire() as connection:
@@ -242,36 +233,29 @@ async def set_telegram_code(request: Request):
 
         if user.is_banned:
             response.set_type_and_message(MessageType.WARNING, "BAN")
+            response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
             return json(response.dump())
 
     hash_code = storage.AuthInfoClass.get_hash_code(request.ctx.user_id)
     
     if not hash_code:
         response.set_type_and_message(MessageType.WARNING, "Хэш не найден, попробуйте запустить бота снова!")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
         return json(response.dump())
     
     status = await storage.AuthInfoClass.auth_code(request.ctx.user_id, data["code"])
 
     if status == AuthInfoEnum.CLIENT_AUTH_SUCCSESS:
         response = TelegramServerResponse(True, "Бот запущен!", MessageType.SUCCESS)
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
     elif status == AuthInfoEnum.CLIENT_PHONE_CODE_EXPIRED:
         response.set_type_and_message(MessageType.WARNING, "Код просрочен, перезапустите бота!")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
     elif status == AuthInfoEnum.CLIENT_PASSWORD_INVALID:
         response.set_type_and_message(MessageType.WARNING, "2fa пароль - неверный")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
     else:
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
+        response.set_running(storage.AuthInfoClass.get_status_client(request.ctx.user_id))
 
-    try:
-        if client.is_connected or client.is_initialized:
-            await client.stop()
-        elif not await storage.AuthInfoClass.start_client(request.ctx.user_id):
-            response.set_running(not response.running)
-            response.add_message("Попробуйте вход через код снова!")
-            response.set_message_type(MessageType.WARNING)
-    except Exception as error:
-        del storage.AuthInfoClass.clients[request.ctx.user_id]
-        response.add_message("Что-то пошло не так...")
-        response.add_message("1. Перезагрузите страницу")
-        response.add_message("2. Попробуйте снова!")
-    
     return json(response.dump())
