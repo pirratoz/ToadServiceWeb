@@ -208,9 +208,12 @@ async def set_telegram_turn(request: Request):
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
 
     try:
-        await storage.AuthInfoClass.start_client(request.ctx.user_id)
+        if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
+            response.set_running(not response.running)
+            response.add_message("Попробуйте вход через код снова!")
+            response.set_message_type(MessageType.WARNING)
     except:
-        response.add_message("Что-то пошло не так, попробуйте авторизоваться через телеграм снова!")
+        response.add_message("Что-то пошло не так...")
 
     return json(response.dump())
 
@@ -253,8 +256,11 @@ async def set_telegram_code(request: Request):
         response.set_type_and_message(MessageType.WARNING, "Произошла ошибка, попробуйте ещё раз или сообщите админу")
 
     try:
-        await storage.AuthInfoClass.start_client(request.ctx.user_id)
+        if not await storage.AuthInfoClass.start_client(request.ctx.user_id):
+            response.set_running(not response.running)
+            response.add_message("Попробуйте вход через код снова!")
+            response.set_message_type(MessageType.WARNING)
     except:
-        response.add_message("Что-то пошло не так, попробуйте авторизоваться через телеграм снова!")
+        response.add_message("Что-то пошло не так...")
     
     return json(response.dump())
