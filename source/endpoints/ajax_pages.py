@@ -1,7 +1,7 @@
 from datetime import datetime
 from dataclasses import dataclass
 from enum import Enum
-import asyncio
+from sqlite3 import OperationalError
 
 from pyrogram import errors
 
@@ -209,6 +209,10 @@ async def set_telegram_turn(request: Request):
     client = get_client()
 
     try:
+        status = await client.connect()
+        if not status:
+            await storage.AuthInfoClass.auth_send_key(user_id)
+
         await client.start()
         storage.AuthInfoClass.client_running[user_id] = True
         response.set_type_and_message(MessageType.SUCCESS, "Бот запущен!")
@@ -222,6 +226,9 @@ async def set_telegram_turn(request: Request):
             response.add_message("Введите код из Telegram!")
         else:
             response.set_type_and_message(MessageType.WARNING, "Неизвестная ошибка при получении ключа!")
+    except OperationalError:
+        storage.AuthInfoClass.remove_files(user_id)
+        response.add_message("Перезагрузите страницу и попробуйте ещё раз")
 
     return json(response.dump())
 
