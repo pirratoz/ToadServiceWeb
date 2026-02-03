@@ -192,7 +192,7 @@ async def set_telegram_turn(request: Request):
     client = storage.AuthInfoClass.get_client(user_id)
     if storage.AuthInfoClass.get_status_client(user_id):
         storage.AuthInfoClass.client_running[user_id] = False
-        await client.disconnect()
+        await client.stop()
         response.set_type_and_message(MessageType.SUCCESS, "Бот остановлен!")
         response.set_running(storage.AuthInfoClass.get_status_client(user_id))
         return json(response.dump())
