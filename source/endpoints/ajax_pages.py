@@ -212,8 +212,8 @@ async def set_telegram_turn(request: Request):
         status = await client.connect()
         if not status:
             await storage.AuthInfoClass.auth_send_key(user_id)
-
-        await client.start()
+        else:
+            await client.start()
         storage.AuthInfoClass.client_running[user_id] = True
         response.set_type_and_message(MessageType.SUCCESS, "Бот запущен!")
         response.set_running(True)
