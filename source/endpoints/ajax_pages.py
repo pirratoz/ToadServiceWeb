@@ -209,7 +209,7 @@ async def set_telegram_turn(request: Request):
     client = get_client()
 
     try:
-        status = client.is_connected
+        status = await client.connect()
         print(f"STATUS: {status}")
         if not status:
             await storage.AuthInfoClass.auth_send_key(user_id)
