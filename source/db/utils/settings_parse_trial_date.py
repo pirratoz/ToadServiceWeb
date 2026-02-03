@@ -9,7 +9,7 @@ def parse_interval(interval_str: str) -> timedelta:
     pattern = r"(\d+)\s*(week|weeks|day|days|hour|hours|minute|minutes|min|second|seconds|sec|secs)"
     matches = re.findall(pattern, interval_str, flags=re.IGNORECASE)
 
-    return timedelta(parse_string(matches))
+    return timedelta(**parse_string(matches))
 
 
 def parse_interval_for_db(interval_str: str) -> str:
